@@ -123,6 +123,7 @@ in
     unstable.gnomeExtensions.appindicator
     unstable.gnomeExtensions.useless-gaps
     unstable.gnomeExtensions.transparent-top-panel
+    unstable.gnomeExtensions.dash-to-panel
     unstable.vscode
     unstable.vscode-with-extensions
     (vscode-with-extensions.override {
