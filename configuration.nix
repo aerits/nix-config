@@ -78,6 +78,10 @@ in
     xkbVariant = "";
   };
 
+  # enable japanese input with fcitx as ime, and mozc as input method in fcitx
+  i18n.inputMethod.enabled = "fcitx";
+  i18n.inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
