@@ -117,13 +117,19 @@ in
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    # system tools
     unstable.neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     unstable.wget
     unstable.nodejs
+    unstable.ttyd
+
+    # gnome extensions
     unstable.gnomeExtensions.appindicator
     unstable.gnomeExtensions.useless-gaps
     unstable.gnomeExtensions.transparent-top-panel
     unstable.gnomeExtensions.dash-to-panel
+
+    #vscode + extensions
     unstable.vscode
     unstable.vscode-with-extensions
     (vscode-with-extensions.override {
@@ -131,9 +137,12 @@ in
         vscodevim.vim
       ];
     })
+
+    # steam stuff
     unstable.protonup-ng
   ];
 
+  # download fonts
   fonts.fonts = with pkgs; [
     noto-fonts
     noto-fonts-cjk
@@ -141,6 +150,7 @@ in
     source-code-pro
   ];
 
+  # make steam work
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
