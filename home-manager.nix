@@ -20,6 +20,7 @@ in
       pkgs.element-desktop
       pkgs.armcord
       pkgs.tor-browser-bundle-bin
+      pkgs.foliate
       /*doom-emacs*/
     ];
 
