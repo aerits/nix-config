@@ -1,27 +1,49 @@
 { config, pkgs, ... }:
 let
   home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
+  unstableTarball =
+    fetchTarball
+      https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
 in
 {
   imports = [
     (import "${home-manager}/nixos")
   ];
+  nixpkgs.config = {
+    packageOverrides = pkgs: {
+      unstable = import unstableTarball {
+        config = config.nixpkgs.config;
+      };
+    };
+  };
 
   home-manager.users.diced = {
     home.stateVersion = "18.09";
 
-    home.packages = [
-      pkgs.librewolf
-      pkgs.thunderbird
-      pkgs.ungoogled-chromium
-      pkgs.git
-      pkgs.pfetch
-      pkgs.keepassxc
-      pkgs.element-desktop
-      pkgs.armcord
-      pkgs.tor-browser-bundle-bin
-      pkgs.foliate
-      /*doom-emacs*/
+    home.packages = with pkgs.unstable; [
+      # internet
+      librewolf
+      thunderbird
+      ungoogled-chromium
+      tor-browser-bundle-bin
+
+      # chat
+      teamspeak_client
+      element-desktop
+      armcord
+
+      # programming
+      vscode
+
+      # gaming
+      grapejuice
+      protonup-ng
+      prismlauncher-qt5
+
+      # misc
+      pfetch
+      keepassxc
+      foliate
     ];
 
     programs.git = {
@@ -38,6 +60,8 @@ in
 	};
       };
     };
+
+    home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
 
   };
 }

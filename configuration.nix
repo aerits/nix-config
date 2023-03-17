@@ -9,6 +9,14 @@ let
     fetchTarball
       https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
 
+  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
+    export __NV_PRIME_RENDER_OFFLOAD=1
+    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+    export __VK_LAYER_NV_optimus=NVIDIA_only
+    exec "$@"
+  '';
+
 in
 { 
   imports =
@@ -120,26 +128,19 @@ in
     # system tools
     unstable.neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     unstable.wget
+    unstable.git
     unstable.nodejs
     unstable.ttyd
+    unstable.alacritty
+
+    # gnome tweaks
+    unstable.gnome.gnome-tweaks
 
     # gnome extensions
     unstable.gnomeExtensions.appindicator
     unstable.gnomeExtensions.useless-gaps
     unstable.gnomeExtensions.transparent-top-panel
     unstable.gnomeExtensions.dash-to-panel
-
-    #vscode + extensions
-    unstable.vscode
-    unstable.vscode-with-extensions
-    (vscode-with-extensions.override {
-      vscodeExtensions = with vscode-extensions; [
-        vscodevim.vim
-      ];
-    })
-
-    # steam stuff
-    unstable.protonup-ng
   ];
 
   # download fonts
@@ -160,6 +161,13 @@ in
   #nvidia drivers
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.opengl.enable = true;
+  hardware.nvidia.modesetting.enable = true;
+  hardware.nvidia.prime = {
+    offload.enable = true;
+    nvidiaBusId = "PCI:1:0:0";
+
+    intelBusId = "PCI:0:02:0";
+  };
 
   # enable flatpaks
   #services.flatpak.enable = true;
