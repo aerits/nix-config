@@ -141,6 +141,10 @@ in
     unstable.gnomeExtensions.useless-gaps
     unstable.gnomeExtensions.transparent-top-panel
     unstable.gnomeExtensions.dash-to-panel
+
+    # misc
+    unstable.vscode
+    unstable.prismlauncher-qt5
   ];
 
   # download fonts

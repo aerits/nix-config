@@ -32,13 +32,10 @@ in
       element-desktop
       armcord
 
-      # programming
-      vscode
-
       # gaming
+      osu-lazer-bin
       grapejuice
       protonup-ng
-      prismlauncher-qt5
 
       # misc
       pfetch
