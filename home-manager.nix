@@ -33,6 +33,7 @@ in
       armcord
 
       # gaming
+      polychromatic
       osu-lazer-bin
       grapejuice
       protonup-ng
