@@ -117,38 +117,40 @@ in
   users.users.diced = {
     isNormalUser = true;
     description = "diced";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "plugdev" ];
     packages = with pkgs; [
     ];
   };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs.unstable; [
     # system tools
-    unstable.neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    unstable.wget
-    unstable.git
-    unstable.nodejs
-    unstable.ttyd
-    unstable.alacritty
+    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    wget
+    git
+    nodejs
+    ttyd
+    alacritty
+    gcc
 
     # gnome tweaks
-    unstable.gnome.gnome-tweaks
+    gnome.gnome-tweaks
 
     # gnome extensions
-    unstable.gnomeExtensions.appindicator
-    unstable.gnomeExtensions.useless-gaps
-    unstable.gnomeExtensions.transparent-top-panel
-    unstable.gnomeExtensions.dash-to-panel
+    gnomeExtensions.appindicator
+    gnomeExtensions.useless-gaps
+    gnomeExtensions.transparent-top-panel
+    gnomeExtensions.dash-to-panel
 
     # misc
-    unstable.vscode
-    unstable.prismlauncher-qt5
+    vscode
+    prismlauncher-qt5
   ];
 
   # download fonts
   fonts.fonts = with pkgs; [
+    nerdfonts
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
@@ -172,6 +174,9 @@ in
 
     intelBusId = "PCI:0:02:0";
   };
+
+  # razer
+  hardware.openrazer.enable = true;
 
   # enable flatpaks
   #services.flatpak.enable = true;
@@ -197,6 +202,12 @@ in
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
   networking.firewall.enable = false;
+
+  # set bash aliases
+  programs.bash.shellAliases = {
+    vim = "nvim";
+    vi = "nvim";
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions

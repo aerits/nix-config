@@ -33,10 +33,14 @@ in
       armcord
 
       # gaming
-      polychromatic
       osu-lazer-bin
       grapejuice
       protonup-ng
+
+      # videos
+      kdenlive
+      obs-studio
+      audacity
 
       # misc
       pfetch
@@ -60,6 +64,7 @@ in
     };
 
     home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
+    home.file.".config/nvim/init.lua".source=./nvim.lua;
 
   };
 }
