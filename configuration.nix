@@ -33,10 +33,18 @@ in
     };
   };
 
-  # Bootloader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot = {
+    # bootloader
+    loader = {
+      systemd-boot.enable = true;
+      efi = {
+        canTouchEfiVariables = true;
+	efiSysMountPoint = "/boot/efi";
+      };
+    };
+
+    kernelPackages = pkgs.linuxPackages_zen;
+  };
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -78,6 +86,7 @@ in
     epiphany
     gnome.geary
     gnome.yelp
+    gnome-console
   ]);
 
   # Configure keymap in X11
@@ -117,8 +126,9 @@ in
   users.users.diced = {
     isNormalUser = true;
     description = "diced";
-    extraGroups = [ "networkmanager" "wheel" "plugdev" ];
+    extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
+    # declared in home manager
     ];
   };
 
@@ -139,8 +149,6 @@ in
 
     # gnome extensions
     gnomeExtensions.appindicator
-    gnomeExtensions.useless-gaps
-    gnomeExtensions.transparent-top-panel
     gnomeExtensions.dash-to-panel
 
     # misc
@@ -174,12 +182,6 @@ in
 
     intelBusId = "PCI:0:02:0";
   };
-
-  # razer
-  hardware.openrazer.enable = true;
-
-  # enable flatpaks
-  #services.flatpak.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
