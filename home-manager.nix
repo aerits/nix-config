@@ -23,18 +23,25 @@ in
     home.packages = with pkgs.unstable; [
       # internet
       librewolf
+      mullvad-browser
       thunderbird
-      ungoogled-chromium
+      brave
       tor-browser-bundle-bin
+      qbittorrent
+
+      emacs-gtk
 
       # chat
       teamspeak_client
       element-desktop
       armcord
 
+      # media
+      mpv
+
       # gaming
       osu-lazer-bin
-      grapejuice
+      rpcs3
       protonup-ng
 
       # videos
@@ -43,9 +50,19 @@ in
       audacity
 
       # misc
+      qemu
+      wpsoffice
+      anki-bin
       pfetch
       keepassxc
       foliate
+      krita
+
+      # temrinal apps
+      ytfzf
+      cmus
+      yt-dlp
+      ytmdl
     ];
 
     programs.git = {

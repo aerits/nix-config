@@ -23,6 +23,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./home-manager.nix
+      #./emacs.nix
     ];
   
   nixpkgs.config = {
@@ -32,6 +33,8 @@ in
       };
     };
   };
+
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   boot = {
     # bootloader
@@ -96,8 +99,8 @@ in
   };
 
   # enable japanese input with fcitx as ime, and mozc as input method in fcitx
-  i18n.inputMethod.enabled = "fcitx";
-  i18n.inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
+  i18n.inputMethod.enabled = "fcitx5";
+  i18n.inputMethod.fcitx5.addons = with pkgs; [ fcitx5-mozc ];
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
@@ -122,6 +125,13 @@ in
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  services.syncthing = {
+    enable = true;
+    user = "diced";
+    dataDir = "home/diced/Documents";    # Default folder for new synced folders
+    configDir = "/home/diced/Documents/.config/syncthing";   # Folder for Syncthing's settings and keys
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.diced = {
     isNormalUser = true;
@@ -130,6 +140,11 @@ in
     packages = with pkgs; [
     # declared in home manager
     ];
+  };
+
+  virtualisation.docker.rootless = {
+    enable = true;
+    setSocketVariable = true;
   };
 
   # List packages installed in system profile. To search, run:
@@ -141,8 +156,15 @@ in
     git
     nodejs
     ttyd
-    alacritty
+    cmake
+    libtool
+    libvterm
+    # alacritty
     gcc
+    docker
+    docker-compose
+    # google-drive-ocamlfuse # for google drive stuff
+    blackbox-terminal
 
     # gnome tweaks
     gnome.gnome-tweaks
@@ -152,6 +174,8 @@ in
     gnomeExtensions.dash-to-panel
 
     # misc
+    vorta
+    ntfs3g
     vscode
     prismlauncher-qt5
   ];
@@ -163,6 +187,7 @@ in
     noto-fonts-cjk
     noto-fonts-emoji
     source-code-pro
+    corefonts
   ];
 
   # make steam work
@@ -183,6 +208,9 @@ in
     intelBusId = "PCI:0:02:0";
   };
 
+  # enable flatpaks
+  services.flatpak.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -197,7 +225,14 @@ in
   # List services that you want to enable:
 
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh = {
+    enable = true;
+    # require public key authentication for better security
+    passwordAuthentication = false;
+    # kbdInteractiveAuthentication = false;
+    permitRootLogin = "yes";
+  };
+
 
   # Open ports in the firewall.
   # networking.firewall.allowedTCPPorts = [ ... ];
@@ -209,6 +244,7 @@ in
   programs.bash.shellAliases = {
     vim = "nvim";
     vi = "nvim";
+    qr = "sh ./scripts/qr.sh";
   };
 
   # This value determines the NixOS release from which the default

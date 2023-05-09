@@ -150,6 +150,11 @@ vim.keymap.set('n', '<leader>fs', '<cmd>Telescope current_buffer_fuzzy_find<cr>'
 
 vim.keymap.set('n', '<leader>bc', '<cmd>Bdelete<CR>')
 
+vim.o.tabstop = 2 -- A TAB character looks like 4 spaces
+vim.o.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
+vim.o.softtabstop = 2 -- Number of spaces inserted instead of a TAB character
+vim.o.shiftwidth = 2 -- Number of spaces inserted when indenting
+
 return require('packer').startup(function(use)
   -- package manager
   use 'wbthomason/packer.nvim'
