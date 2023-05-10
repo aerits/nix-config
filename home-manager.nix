@@ -16,7 +16,7 @@ in
       };
     };
   };
-
+  
   home-manager.users.diced = {
     home.stateVersion = "18.09";
 
@@ -29,7 +29,7 @@ in
       tor-browser-bundle-bin
       qbittorrent
 
-      emacs-gtk
+      # emacs
 
       # chat
       teamspeak_client
@@ -72,11 +72,11 @@ in
 
       extraConfig = {
         credential.helper = "${
-	    pkgs.git.override {withLibsecret = true; }
-          }/bin/git-credential-libsecret";
-	safe = {
+	        pkgs.git.override {withLibsecret = true; }
+        }/bin/git-credential-libsecret";
+	      safe = {
           directory = "/etc/nixos";
-	};
+	      };
       };
     };
 

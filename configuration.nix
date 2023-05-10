@@ -23,7 +23,7 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./home-manager.nix
-      #./emacs.nix
+      ./emacs.nix
     ];
   
   nixpkgs.config = {
@@ -156,9 +156,18 @@ in
     git
     nodejs
     ttyd
-    cmake
-    libtool
-    libvterm
+
+    # computing
+    sbcl
+
+    # for dirvish
+    fd
+    imagemagick
+    poppler
+    ffmpegthumbnailer
+    mediainfo
+    unzip
+    
     # alacritty
     gcc
     docker

@@ -1,6 +1,6 @@
 {config, pkgs, callPackage, ... }:
 {
-# ...
+  # ...
 
   services.emacs.package = pkgs.emacsUnstable;
 
@@ -10,15 +10,9 @@
     }))
   ];
 
-  environment.systemPackages = [
-    (emacsWithPackagesFromUsePackage {
-      # Your Emacs config file. Org mode babel files are also
-      # supported.
-      # NB: Config files cannot contain unicode characters, since
-      #     they're being parsed in nix, which lacks unicode
-      #     support.
-      # config = ./emacs.org;
-      #config = ./emacs.el;
+  home-manager.users.diced.home.packages = [
+    (pkgs.emacsWithPackagesFromUsePackage {
+      config = ./emacs.el;
 
       # Whether to include your config as a default init file.
       # If being bool, the value of config is used.
@@ -32,7 +26,7 @@
       defaultInitFile = true;
 
       # Package is optional, defaults to pkgs.emacs
-      package = pkgs.emacsGit;
+      package = pkgs.emacs-gtk;
 
       # By default emacsWithPackagesFromUsePackage will only pull in
       # packages with `:ensure`, `:ensure t` or `:ensure <package name>`.
@@ -41,7 +35,7 @@
       # `:ensure nil` or `:disabled`.
       # Note that this is NOT recommended unless you've actually set
       # `use-package-always-ensure` to `t` in your config.
-      alwaysEnsure = true;
+      # alwaysEnsure = true;
 
       # For Org mode babel files, by default only code blocks with
       # `:tangle yes` are considered. Setting `alwaysTangle` to `true`
@@ -50,22 +44,22 @@
       # Note that this is NOT recommended unless you have something like
       # `#+PROPERTY: header-args:emacs-lisp :tangle yes` in your config,
       # which defaults `:tangle` to `yes`.
-      alwaysTangle = true;
+      # alwaysTangle = true;
 
       # Optionally provide extra packages not in the configuration file.
       extraEmacsPackages = epkgs: [
-        # epkgs.cask
+        #epkgs.cask
       ];
 
       # Optionally override derivations.
-      #override = final: prev: {
-      #  weechat = prev.melpaPackages.weechat.overrideAttrs(old: {
-      #    patches = [ ./weechat-el.patch ];
-      #  });
-      #};
+      # override = final: prev: {
+      #   weechat = prev.melpaPackages.weechat.overrideAttrs(old: {
+      #     patches = [ ./weechat-el.patch ];
+      #   });
+      # };
     })
   ];
 
-
-# ...
+  
+  # ...
 }
