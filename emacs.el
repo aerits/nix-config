@@ -1,10 +1,10 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;; package managing ;;;;;;;;;;;;;;;;;;;;;;;;;
-                           ;; use package ;;
+;; use package ;;
 ;; This is only needed once, near the top of the file
 (eval-when-compile
   (require 'use-package))
 
-                             ;; melpa ;;
+;; melpa ;;
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 ;; Comment/uncomment this line to enable MELPA Stable if desired.  See `package-archive-priorities`
@@ -34,8 +34,6 @@
   ("s-b" . centaur-tabs-backward)
   ("s-f" . centaur-tabs-forward))
 (setq centaur-tabs-style "bar")
-(centaur-tabs-headline-match)
-
 
 ;; fuzzy search ;;
 ;; Enable vertico
@@ -90,9 +88,12 @@
   (setq enable-recursive-minibuffers t))
 
 ;; powerline ;;
-(use-package powerline
+;; (use-package powerline
+;;   :ensure t)
+;; (powerline-default-theme)
+(use-package telephone-line
   :ensure t)
-(powerline-default-theme)
+(telephone-line-mode 1)
 
 ;; dim fake buffers ;;
 (use-package solaire-mode
@@ -117,8 +118,8 @@
 ;; highlight symbols ;;
 (use-package idle-highlight-mode
   :ensure t
-  :config (setq idle-highlight-idle-time 0.2)
-  :hook ((prog-mode text-mode) . idle-highlight-mode))
+  :config (setq idle-highlight-idle-time 0.2))
+  ;; :hook ((prog-mode text-mode) . idle-highlight-mode))
 
 ;; multiple cursors ;;
 
@@ -213,11 +214,76 @@
 (use-package slime
   :ensure t)
 (setq inferior-lisp-program "sbcl")
+(use-package markdown-mode
+  :ensure t
+  :mode ("README\\.md\\'" . gfm-mode)
+  :init (setq markdown-command "multimarkdown")
+  :bind (:map markdown-mode-map
+	      ("C-c C-e" . markdown-do)))
+
+;; error check ;;
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+;; lsp ;;
+(use-package eglot
+  :ensure t
+  :hook
+  ((python-mode . eglot-ensure)
+   (nix-mode . eglot-ensure)))
 
 ;; code completion ;;
-(use-package auto-complete
+(use-package corfu
+  :ensure t
+  ;; Optional customizations
+  ;; :custom
+  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  ;; (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+
+  ;; Enable Corfu only for certain modes.
+  ;; :hook ((prog-mode . corfu-mode)
+  ;;        (shell-mode . corfu-mode)
+  ;;        (eshell-mode . corfu-mode))
+
+  ;; Recommended: Enable Corfu globally.
+  ;; This is recommended since Dabbrev can be used globally (M-/).
+  ;; See also `corfu-exclude-modes'.
+  :init
+  (global-corfu-mode))
+
+;; A few more useful configurations...
+(use-package emacs
+  :init
+  ;; TAB cycle if there are only few candidates
+  (setq completion-cycle-threshold 3)
+
+  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+  ;; (setq read-extended-command-predicate
+  ;;       #'command-completion-default-include-p)
+
+  ;; Enable indentation+completion using the TAB key.
+  ;; `completion-at-point' is often bound to M-TAB.
+  (setq tab-always-indent 'complete))
+
+;; tree sitter
+(use-package tree-sitter
   :ensure t)
-(ac-config-default)
+(use-package tree-sitter-langs
+  :ensure t)
+(use-package tree-sitter-indent
+  :ensure t)
+
+;; rainbow () [] {} to make it easier to read
+(use-package rainbow-delimiters
+  :ensure t)
 
 ;; icons ;;
 (use-package nerd-icons
@@ -228,6 +294,13 @@
   ;; but you can use any other Nerd Font if you want
   ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
   )
+
+;; emacs multimedia
+(use-package emms
+  :ensure t)
+(emms-all)
+(setq emms-player-list '(emms-player-mpv)
+      emms-info-functions '(emms-info-native))
 
 (use-package meow
   :ensure t)
@@ -255,6 +328,10 @@
    '("/" . meow-keypad-describe-key)
    '("?" . meow-cheatsheet))
   (meow-normal-define-key
+   ;; SELF CONFIG FOR MEOW NORMAL MODE
+   '("/" . enlarge-window)
+   '("?" . enlarge-window-horizontally)
+   ;; DEFAULT CONFIG FOR MEOW NORMAL MODE
    '("0" . meow-expand-0)
    '("9" . meow-expand-9)
    '("8" . meow-expand-8)
@@ -328,14 +405,17 @@
 (setq user-mail-address	"utu.jin@disroot.org"
       user-full-name	"utu.jin")
 
-(setq gnus-select-method '(nnrss "https://reddit.com/r/emacs.rss"))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; extra config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; moe theme
-(use-package moe-theme
+;; ;; moe theme
+;; (use-package moe-theme
+;;   :ensure t)
+;; (load-theme 'moe-light t)
+
+;; spacemacs theme
+(use-package spacemacs-theme
   :ensure t)
-(load-theme 'moe-light t)
+(load-theme 'spacemacs-light)
 
 ;; (use-package poet-theme
 ;;   :ensure t)

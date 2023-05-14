@@ -29,8 +29,6 @@ in
       tor-browser-bundle-bin
       qbittorrent
 
-      # emacs
-
       # chat
       teamspeak_client
       element-desktop

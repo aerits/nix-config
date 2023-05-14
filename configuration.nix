@@ -24,6 +24,7 @@ in
       ./hardware-configuration.nix
       ./home-manager.nix
       ./emacs.nix
+      ./code.nix
     ];
   
   nixpkgs.config = {
@@ -42,7 +43,7 @@ in
       systemd-boot.enable = true;
       efi = {
         canTouchEfiVariables = true;
-	efiSysMountPoint = "/boot/efi";
+	      efiSysMountPoint = "/boot/efi";
       };
     };
 
@@ -138,7 +139,7 @@ in
     description = "diced";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
-    # declared in home manager
+      # declared in home manager
     ];
   };
 
@@ -153,25 +154,8 @@ in
     # system tools
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    git
-    nodejs
     ttyd
 
-    # computing
-    sbcl
-
-    # for dirvish
-    fd
-    imagemagick
-    poppler
-    ffmpegthumbnailer
-    mediainfo
-    unzip
-    
-    # alacritty
-    gcc
-    docker
-    docker-compose
     # google-drive-ocamlfuse # for google drive stuff
     blackbox-terminal
 
@@ -185,7 +169,6 @@ in
     # misc
     vorta
     ntfs3g
-    vscode
     prismlauncher-qt5
   ];
 
