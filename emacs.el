@@ -31,8 +31,8 @@
   :config
   (centaur-tabs-mode t)
   :bind
-  ("s-b" . centaur-tabs-backward)
-  ("s-f" . centaur-tabs-forward))
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
 (setq centaur-tabs-style "bar")
 
 ;; fuzzy search ;;
@@ -396,6 +396,11 @@
 (meow-setup)
 (meow-global-mode 1)
 
+;; fancy org mode
+(use-package org-modern
+  :ensure t)
+
+(with-eval-after-load 'org (global-org-modern-mode))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (use-package ox-ioslide
@@ -406,6 +411,12 @@
       user-full-name	"utu.jin")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; extra config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; fonts
+(set-face-attribute 'default nil :font "Noto Sans Mono CJK JP-10")
+;; (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
+;; (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
+
 
 ;; ;; moe theme
 ;; (use-package moe-theme
