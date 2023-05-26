@@ -93,7 +93,10 @@
 ;; (powerline-default-theme)
 (use-package telephone-line
   :ensure t)
-(telephone-line-mode 1)
+;; (telephone-line-mode 1)
+(use-package mood-line
+  :ensure t)
+(mood-line-mode)
 
 ;; dim fake buffers ;;
 (use-package solaire-mode
@@ -230,19 +233,21 @@
   :ensure t
   :hook
   ((python-mode . eglot-ensure)
-   (nix-mode . eglot-ensure)))
-
+   (nix-mode . eglot-ensure))
+  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+  :hook
+  (nix-mode . eglot-ensure))
 ;; code completion ;;
 (use-package corfu
   :ensure t
   ;; Optional customizations
-  ;; :custom
+  :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  ;; (corfu-auto t)                 ;; Enable auto completion
+  (corfu-auto t)                 ;; Enable auto completion
   ;; (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  ;; (corfu-preview-current nil)    ;; Disable current candidate preview
+  (corfu-preview-current nil)    ;; Disable current candidate preview
   ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
@@ -294,6 +299,31 @@
   ;; but you can use any other Nerd Font if you want
   ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
   )
+
+;; latex preview
+(use-package auctex
+  :ensure t)
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-master nil)
+
+(add-hook 'LaTeX-mode-hook 'visual-line-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(add-hook 'LaTeX-mode-hook 'LaTeX-math-mode)
+
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(setq reftex-plug-into-AUCTeX t)
+
+(setq TeX-PDF-mode t)
+
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+          #'TeX-revert-document-buffer)
 
 ;; emacs multimedia
 (use-package emms
@@ -396,19 +426,44 @@
 (meow-setup)
 (meow-global-mode 1)
 
+(with-eval-after-load 'org (global-org-modern-mode))
+
+;; better window navigation
+;; (global-set-key "\s-j" windmove-left)
+;; (global-set-key "\s-k" windmove-down)
+;; (global-set-key "\s-l" windmove-up)
+;; (global-set-key "\s-;" windmove-right)
+
+;; emacs-everywhere
+(use-package emacs-everywhere
+  :ensure t)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; slides
+(use-package ox-ioslide
+  :ensure t)
+
 ;; fancy org mode
 (use-package org-modern
   :ensure t)
 
-(with-eval-after-load 'org (global-org-modern-mode))
+;; org babel
+(add-to-list 'load-path "~/.emacs.d/site-lisp/ob-nix")
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((python . t)
+   (nix . t)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package ox-ioslide
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; elfeed ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(use-package elfeed
   :ensure t)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; gnus ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(setq user-mail-address	"utu.jin@disroot.org"
-      user-full-name	"utu.jin")
+(global-set-key (kbd "C-x w") 'elfeed)
+(setf url-queue-timeout 30)
+(use-package elfeed-org
+  :ensure t)
+(elfeed-org)
+(setq rmh-elfeed-org-files (list "/etc/nixos/elfeed.org"))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; extra config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 

@@ -14,10 +14,15 @@
           numpy
           tkinter
           jedi-language-server
+          requests
           matplotlib]))
 
       # lsp
       rnix-lsp
+      nil
+
+      # latex
+      texlive.combined.scheme-full
 
       # for dirvish
       fd

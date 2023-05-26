@@ -22,9 +22,7 @@ in
 
     home.packages = with pkgs.unstable; [
       # internet
-      librewolf
       mullvad-browser
-      thunderbird
       brave
       tor-browser-bundle-bin
       qbittorrent
@@ -61,6 +59,13 @@ in
       cmus
       yt-dlp
       ytmdl
+
+      # emacs-everywhere
+      wl-clipboard
+      ydotool
+      xdotool
+      xorg.xprop
+      xorg.xwininfo
     ];
 
     programs.git = {

@@ -25,6 +25,7 @@ in
       ./home-manager.nix
       ./emacs.nix
       ./code.nix
+      ./nixgaming.nix
     ];
   
   nixpkgs.config = {
@@ -51,7 +52,7 @@ in
   };
 
   networking.hostName = "nixos"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -219,10 +220,12 @@ in
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    # require public key authentication for better security
-    passwordAuthentication = false;
-    # kbdInteractiveAuthentication = false;
-    permitRootLogin = "yes";
+    settings = {
+      # require public key authentication for better security
+      PasswordAuthentication = true;
+      # kbdInteractiveAuthentication = false;
+      PermitRootLogin = "yes";
+    };
   };
 
 
