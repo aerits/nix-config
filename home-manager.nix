@@ -59,6 +59,7 @@ in
       cmus
       yt-dlp
       ytmdl
+      w3m
 
       # emacs-everywhere
       wl-clipboard

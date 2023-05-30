@@ -453,6 +453,7 @@
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)
+   (shell . t)
    (nix . t)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; elfeed ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -465,13 +466,53 @@
 (elfeed-org)
 (setq rmh-elfeed-org-files (list "/etc/nixos/elfeed.org"))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; custom funcs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; better novelupdates rss - mark novelupdates chapters fromm elfeed as read
+;; get out of here flycheck smh this is good code
+(defun nu-read ()
+  "mark novelupdates chapter as read
+  in the elfeed entry and navigate
+  to the chapter in eww"
+  (interactive)
+  (progn (re-search-forward "novelupdates.com/series")
+	 (setq series (thing-at-point 'url))
+	 ;; (message series)
+	 (re-search-backward "novelupdates.com/extnu")
+	 (setq chapter (thing-at-point 'url))
+	 ;; (message chapter)
+	 (message
+	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
+					   (concat series
+						   (concat " " chapter)))))
+	 (eww (thing-at-point 'url))))
+(defun nu-mark-read ()
+  "do the same thing as the last
+  function except without eww"
+  (interactive)
+  (progn (re-search-forward "novelupdates.com/series")
+	 (setq series (thing-at-point 'url))
+	 ;; (message series)
+	 (re-search-backward "novelupdates.com/extnu")
+	 (setq chapter (thing-at-point 'url))
+	 ;; (message chapter)
+	 (message
+	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
+					   (concat series
+						   (concat " " chapter)))))))
+
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; extra config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; fonts
-(set-face-attribute 'default nil :font "Noto Sans Mono CJK JP-10")
+(set-frame-font "Inconsolata Nerd Font-11" nil t)
+(set-face-attribute 'variable-pitch nil :font "DejaVu Sans-10")
+(set-fontset-font "fontset-default" 'han "Noto Sans CJK JP-11")
+(set-fontset-font "fontset-default" 'kana "Noto Sans CJK JP-11")
+
 ;; (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
 ;; (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
-
 
 ;; ;; moe theme
 ;; (use-package moe-theme

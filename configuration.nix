@@ -60,6 +60,7 @@ in
 
   # Enable networking
   networking.networkmanager.enable = true;
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   # Set your time zone.
   time.timeZone = "America/Denver";
@@ -220,12 +221,10 @@ in
   # Enable the OpenSSH daemon.
   services.openssh = {
     enable = true;
-    settings = {
-      # require public key authentication for better security
-      PasswordAuthentication = true;
-      # kbdInteractiveAuthentication = false;
-      PermitRootLogin = "yes";
-    };
+    # require public key authentication for better security
+    passwordAuthentication = false;
+    kbdInteractiveAuthentication = false;
+    #permitRootLogin = "yes";
   };
 
 

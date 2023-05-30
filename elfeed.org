@@ -80,7 +80,7 @@
 *** https://invidious.kavin.rocks/feed/channel/UC1xcV34QaE2icXZ21eSvSSw
 *** https://invidious.kavin.rocks/feed/channel/UCMMBpWfWUd3xlcOxrot_neA
 *** https://inv.riverside.rocks/feed/channel/UCSbdMXOI_3HGiFviLZO6kNA 
-*** https://nitter.bus-hit.me/Tundra_Labs/rss 
+*** https://nitter.net/tundra_labs/rss
 *** https://www.uploadvr.com/rss/ 
 *** http://vrscout.com/feed/ 
 ** Video Essays :video_essays:

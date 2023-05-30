@@ -1,5 +1,6 @@
 { config, pkgs, ...}:
 {
+  services.tailscale.enable = true;
   home-manager.users.diced = {
     home.packages = with pkgs; [
       # coding
