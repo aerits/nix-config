@@ -1,4 +1,4 @@
-;;;;;;;;;;;;;;;;;;;;;;;;;;;; package managing ;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;; package managing ;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; use package ;;
 ;; This is only needed once, near the top of the file
 (eval-when-compile
@@ -438,6 +438,31 @@
 (use-package emacs-everywhere
   :ensure t)
 
+;; edit with emacs in firefox
+(use-package edit-server
+  :ensure t
+  :commands edit-server-start
+  :init (if after-init-time
+            (edit-server-start)
+          (add-hook 'after-init-hook
+                    #'(lambda() (edit-server-start))))
+  :config (setq edit-server-new-frame-alist
+                '((name . "Edit with Emacs FRAME")
+                  (top . 200)
+                  (left . 200)
+                  (width . 80)
+                  (height . 25)
+                  (minibuffer . t)
+                  (menu-bar-lines . t)
+                  (window-system . x))))
+
+;; read epubs
+(use-package nov
+  :ensure t
+  :config
+  (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; slides
@@ -506,8 +531,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; extra config ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; fonts
-(set-frame-font "Inconsolata Nerd Font-11" nil t)
-(set-face-attribute 'variable-pitch nil :font "DejaVu Sans-10")
+;; (set-frame-font "Inconsolata Nerd Font-11" nil t)
+;; (set-face-attribute 'variable-pitch nil :font "DejaVu Sans-10")
 (set-fontset-font "fontset-default" 'han "Noto Sans CJK JP-11")
 (set-fontset-font "fontset-default" 'kana "Noto Sans CJK JP-11")
 

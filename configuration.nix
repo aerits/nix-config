@@ -157,6 +157,10 @@ in
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     ttyd
+    unzip
+
+    # for matrix
+    pantalaimon
 
     # google-drive-ocamlfuse # for google drive stuff
     blackbox-terminal
