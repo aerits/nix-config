@@ -27,6 +27,8 @@ in
       tor-browser-bundle-bin
       qbittorrent
 
+      aether
+
       # chat
       teamspeak_client
       element-desktop
