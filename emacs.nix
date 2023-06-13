@@ -2,7 +2,7 @@
 {
   # ...
 
-  services.emacs.package = pkgs.emacsUnstable;
+  services.emacs.package = pkgs.emacs29-gtk3;
 
   nixpkgs.overlays = [
     (import (builtins.fetchTarball {
@@ -28,7 +28,7 @@
       defaultInitFile = true;
 
       # Package is optional, defaults to pkgs.emacs
-      package = pkgs.emacsUnstable;
+      package = pkgs.emacs29-gtk3;
 
       # By default emacsWithPackagesFromUsePackage will only pull in
       # packages with `:ensure`, `:ensure t` or `:ensure <package name>`.

@@ -208,7 +208,8 @@ in
 
   # enable flatpaks
   services.flatpak.enable = true;
-
+  fonts.fontDir.enable = true;
+  
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

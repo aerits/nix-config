@@ -31,8 +31,17 @@
   :config
   (centaur-tabs-mode t)
   :bind
-  ("C-<prior>" . centaur-tabs-backward)
-  ("C-<next>" . centaur-tabs-forward))
+  ("C-x c p" . centaur-tabs-backward)
+  ("C-x c n" . centaur-tabs-forward))
+(global-set-key (kbd "C-x c p") 'centaur-tabs-backward)
+(global-set-key (kbd "C-x c n") 'centaur-tabs-forward)
+(setq centaur-tabs-cycle-scope 'tabs)
+(global-set-key (kbd "C-x c g") 'centaur-tabs-toggle-groups)
+(defun eaf-goto-right-tab ()
+  (centaur-tabs-forward))
+(defun eaf-goto-left-tab ()
+  (centaur-tabs-backward))
+
 (setq centaur-tabs-style "bar")
 
 ;; fuzzy search ;;
@@ -462,6 +471,12 @@
   :config
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
+;; eaf
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :config
+  (require 'eaf-browser)
+  (require 'eaf-video-player))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -511,6 +526,21 @@
 					   (concat series
 						   (concat " " chapter)))))
 	 (eww (thing-at-point 'url))))
+(defun nu-read-eaf ()
+  "same thing as last function
+  except do it with eaf's browser"
+  (interactive)
+  (progn (re-search-forward "novelupdates.com/series")
+	 (setq series (thing-at-point 'url))
+	 ;; (message series)
+	 (re-search-backward "novelupdates.com/extnu")
+	 (setq chapter (thing-at-point 'url))
+	 ;; (message chapter)
+	 (message
+	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
+					   (concat series
+						   (concat " " chapter)))))
+	 (eaf-open-browser (thing-at-point 'url))))
 (defun nu-mark-read ()
   "do the same thing as the last
   function except without eww"
