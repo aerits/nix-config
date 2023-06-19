@@ -165,6 +165,8 @@ in
     # google-drive-ocamlfuse # for google drive stuff
     blackbox-terminal
 
+    steam
+
     # gnome tweaks
     gnome.gnome-tweaks
 
@@ -186,13 +188,21 @@ in
     noto-fonts-emoji
     source-code-pro
     corefonts
+    wqy_zenhei # for steam to show cjk fonts
   ];
 
-  # make steam work
-  programs.steam = {
+  #make steam work
+  # programs.steam = {
+  # enable = true;
+  # remotePlay.openFirewall = true;
+  # dedicatedServer.openFirewall = true;
+  # };
+
+  hardware.opengl.driSupport32Bit = true; 
+
+  # bluetooth
+  hardware.bluetooth = {
     enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
   };
 
   #nvidia drivers
@@ -209,7 +219,8 @@ in
   # enable flatpaks
   services.flatpak.enable = true;
   fonts.fontDir.enable = true;
-  
+  fonts.fontconfig.enable = true;
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 

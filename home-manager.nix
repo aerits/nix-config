@@ -26,8 +26,7 @@ in
       brave
       tor-browser-bundle-bin
       qbittorrent
-
-      aether
+      ani-cli
 
       # chat
       teamspeak_client

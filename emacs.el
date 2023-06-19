@@ -30,6 +30,7 @@
   :demand
   :config
   (centaur-tabs-mode t)
+  (setq centaur-tabs-label-fixed-length 15)
   :bind
   ("C-x c p" . centaur-tabs-backward)
   ("C-x c n" . centaur-tabs-forward))
@@ -37,10 +38,7 @@
 (global-set-key (kbd "C-x c n") 'centaur-tabs-forward)
 (setq centaur-tabs-cycle-scope 'tabs)
 (global-set-key (kbd "C-x c g") 'centaur-tabs-toggle-groups)
-(defun eaf-goto-right-tab ()
-  (centaur-tabs-forward))
-(defun eaf-goto-left-tab ()
-  (centaur-tabs-backward))
+(global-set-key (kbd "C-x c s") 'centaur-tabs-switch-group)
 
 (setq centaur-tabs-style "bar")
 
@@ -476,7 +474,14 @@
   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
   :config
   (require 'eaf-browser)
-  (require 'eaf-video-player))
+  (require 'eaf-video-player)
+  (defun eaf-goto-right-tab ()
+    (centaur-tabs-forward))
+  (defun eaf-goto-left-tab ()
+    (centaur-tabs-backward))
+  (setq eaf-browser-continue-where-left-off t)
+  (setq eaf-browser-default-search-engine "duckduckgo")
+  )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
