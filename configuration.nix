@@ -5,9 +5,9 @@
 { config, pkgs, ... }:
 
 let
-  unstableTarball =
-    fetchTarball
-      https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
+  # unstableTarball =
+  # fetchTarball
+  # https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
 
   nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
     export __NV_PRIME_RENDER_OFFLOAD=1
@@ -26,17 +26,25 @@ in
       ./emacs.nix
       ./code.nix
       ./nixgaming.nix
+      ./cachix.nix
     ];
   
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      unstable = import unstableTarball {
-        config = config.nixpkgs.config;
-      };
-    };
-  };
+  # nixpkgs.config = {
+  # packageOverrides = pkgs: {
+  # unstable = import unstableTarball {
+  # config = config.nixpkgs.config;
+  # };
+  # };
+  # };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  # one of these commands is turning on flakes ig
+  # nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix = {
+    package = pkgs.nixFlakes;
+    extraOptions = ''
+    experimental-features = nix-command flakes
+  '';
+  };
 
   boot = {
     # bootloader
@@ -52,7 +60,7 @@ in
   };
 
   networking.hostName = "nixos"; # Define your hostname.
-    # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -152,7 +160,7 @@ in
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
-  environment.systemPackages = with pkgs.unstable; [
+  environment.systemPackages = with pkgs; [
     # system tools
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget

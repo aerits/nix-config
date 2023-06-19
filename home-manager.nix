@@ -1,26 +1,43 @@
 { config, pkgs, ... }:
 let
-  home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
-  unstableTarball =
-    fetchTarball
-      https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
+  home-manager = (
+    let
+      lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+    in builtins.fetchTarball {
+      url = "https://github.com/nix-community/home-manager/archive/${lock.nodes.home-manager.locked.rev}.tar.gz";
+      sha256 = lock.nodes.home-manager.locked.narHash;
+    }
+  );
+  # home-manager = builtins.fetchTarball "https://github.com/nix-community/home-manager/archive/master.tar.gz";
+  # unstableTarball =
+  #   fetchTarball
+  #     https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
 in
 {
   imports = [
     (import "${home-manager}/nixos")
   ];
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      unstable = import unstableTarball {
-        config = config.nixpkgs.config;
-      };
-    };
-  };
+  
+  # (import (
+  #   let
+  #     lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+  #   in builtins.fetchTarball {
+  #     url = "https://github.com/nix-community/home-manager/archive/${lock.nodes.home-manager.locked.rev}.tar.gz";
+  #     sha256 = lock.nodes.home-manager.locked.narHash;
+  #   }
+  # ))
+  # nixpkgs.config = {
+  # packageOverrides = pkgs: {
+  # unstable = import unstableTarball {
+  # config = config.nixpkgs.config;
+  # };
+  # };
+  # };
   
   home-manager.users.diced = {
-    home.stateVersion = "18.09";
+    home.stateVersion = "23.05";
 
-    home.packages = with pkgs.unstable; [
+    home.packages = with pkgs; [
       # internet
       mullvad-browser
       brave

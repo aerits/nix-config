@@ -2,15 +2,17 @@
 {
   # ...
 
-  services.emacs.package = pkgs.emacs29-gtk3;
+  imports = [ ./cachix.nix ];
 
   nixpkgs.overlays = [
-    (import (builtins.fetchTarball {
-      url = https://github.com/nix-community/emacs-overlay/archive/master.tar.gz;
-    }))
+    (import (
+      let
+        lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+      in builtins.fetchTarball {
+        url = "https://github.com/nix-community/emacs-overlay/archive/${lock.nodes.emacs-overlay.locked.rev}.tar.gz";
+        sha256 = lock.nodes.emacs-overlay.locked.narHash;
+      }))
   ];
-
-  services.emacs.enable = true;
 
   home-manager.users.diced.home.packages = [
     (pkgs.emacsWithPackagesFromUsePackage {
