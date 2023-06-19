@@ -87,6 +87,7 @@ in
 
     home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
     home.file.".config/nvim/init.lua".source=./nvim.lua;
+    home.file.".config/mpv".source=./mpv;
 
   };
 }
