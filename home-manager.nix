@@ -48,7 +48,8 @@ in
       # chat
       teamspeak_client
       element-desktop
-      armcord
+      # armcord
+      webcord
 
       # media
       mpv
@@ -65,7 +66,6 @@ in
 
       # misc
       qemu
-      wpsoffice
       anki-bin
       pfetch
       keepassxc
@@ -104,7 +104,8 @@ in
 
     home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
     home.file.".config/nvim/init.lua".source=./nvim.lua;
-    home.file.".config/mpv".source=./mpv;
+    home.file.".config/mpv/scripts".source=./mpv/scripts;
+    home.file.".config/mpv/script-opts".source=./mpv/script-opts;
 
   };
 }

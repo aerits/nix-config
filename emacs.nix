@@ -14,6 +14,8 @@
       }))
   ];
 
+  services.emacs.enable = true;
+
   home-manager.users.diced.home.packages = [
     (pkgs.emacsWithPackagesFromUsePackage {
       config = ./emacs.el;
