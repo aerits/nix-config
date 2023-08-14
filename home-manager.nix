@@ -40,6 +40,8 @@ in
     home.packages = with pkgs; [
       # internet
       mullvad-browser
+      tetrio-desktop
+      librewolf
       brave
       tor-browser-bundle-bin
       qbittorrent

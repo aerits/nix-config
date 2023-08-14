@@ -14,6 +14,11 @@
       sbcl
       openjdk
 
+      # android
+      android-tools
+      scrcpy
+      soundwireserver
+
       #python
       (python311.withPackages(ps: with ps;
         [
@@ -64,6 +69,7 @@
       gcc
       docker
       docker-compose
+      distrobox
 
       # ide
       vscode
