@@ -15,23 +15,52 @@ in
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
       ./home-manager.nix
+      # ./emacs.nix
+      ./cachix.nix
+      ./hyprland.nix
     ];
+
+  services.flatpak.enable = true;
+  # needed for flatpaks on exwm
+  xdg.portal.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+
+  # airpods i guess
+  hardware.bluetooth.enable = true;
   
-  nixpkgs.config = {
-    packageOverrides = pkgs: {
-      unstable = import unstableTarball {
-        config = config.nixpkgs.config;
-      };
-    };
+  # nixpkgs.config = {
+  #   packageOverrides = pkgs: {
+  #     unstable = import unstableTarball {
+  #       config = config.nixpkgs.config;
+  #     };
+  #   };
+  # };
+
+  # optimise store
+  nix.settings.auto-optimise-store = true;
+
+  system.autoUpgrade = {
+    enable = true;
+    dates = "12:00";
   };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
+  boot = {
+    kernelParams = [ "quiet" "splash" ];
+    plymouth.enable = true;
+    consoleLogLevel = 0;
+    initrd.verbose = false;
+  };
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
 
   networking.hostName = "nixos"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  
+  networking.nameservers = [ "1.1.1.1" "9.9.9.9" "8.8.8.8" "8.8.4.4"];
+  
+  # services.blueman.enable = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -39,6 +68,7 @@ in
 
   # Enable networking
   networking.networkmanager.enable = true;
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   # Set your time zone.
   time.timeZone = "America/Denver";
@@ -62,15 +92,63 @@ in
   services.xserver.enable = true;
   services.xserver.excludePackages = [ pkgs.xterm ];
 
+  # login manager
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.displayManager.sddm.theme = "catppuccin-sddm-corners-unstable";
+
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-tour
-    epiphany
-    gnome.geary
-    gnome.yelp
-  ]);
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
+  # environment.gnome.excludePackages = (with pkgs; [
+  #   gnome-tour
+  #   epiphany
+  #   gnome.geary
+  #   gnome.yelp
+  #   gnome-console
+  # ]);
+  #
+  # kde plasma
+  # services.xserver.displayManager.sddm.enable = true;
+  # services.xserver.desktopManager.plasma5.enable = true;
+  
+  # environment.plasma5.excludePackages = with pkgs.libsForQt5; [
+  #   # elisa
+  #   # gwenview
+  #   # okular
+  #   # oxygen
+  #   # khelpcenter
+  #   # konsole
+  #   # plasma-browser-integration
+  #   # print-manager
+  # ];
+
+  # xfce
+  # services.xserver = {
+  #   libinput = {
+  #     enable = true;
+  #   };
+  #   desktopManager = {
+  #     #       # xfce = {
+  #     #       #   enable = true;
+  #     #       #   noDesktop = true;
+  #     #       #   enableXfwm = false;
+  #     #       # };
+  #     default = "emacs";
+  #     session = [ {
+  #       manage = "desktop";
+  #       name = "emacs";
+  #       start = ''
+  #                     pasystray &
+  #                     nm-applet &
+  #                     emacs
+  #                     '';
+  #       # '';
+  #     }];
+  #   };
+  #   #displayManager.defaultSession = "xfce+i3";
+  #   #windowManager.i3.enable = true;
+  # };
+
 
   # Configure keymap in X11
   services.xserver = {
@@ -79,11 +157,11 @@ in
   };
 
   # enable japanese input with fcitx as ime, and mozc as input method in fcitx
-  i18n.inputMethod.enabled = "fcitx";
-  i18n.inputMethod.fcitx.engines = with pkgs.fcitx-engines; [ mozc ];
+  # i18n.inputMethod.enabled = "fcitx5";
+  # i18n.inputMethod.fcitx5.addons = with pkgs; [ fcitx5-mozc ];
 
   # Enable CUPS to print documents.
-  services.printing.enable = true;
+  services.printing.enable = false;
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -105,45 +183,133 @@ in
   # Enable touchpad support (enabled default in most desktopManager).
   # services.xserver.libinput.enable = true;
 
+  services.syncthing = {
+    enable = true; user = "diced";
+    dataDir = "/home/diced/Documents";
+    configDir = "/home/diced/Documents/.config/syncthing";
+  };
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.diced = {
     isNormalUser = true;
     description = "diced";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [ "networkmanager" "wheel" "input" ];
     packages = with pkgs; [
+      #    	libreoffice
+	    # matrix-commander
+	    # keepassxc
+	    # tor-browser-bundle-bin
+	    # foliate
+	    #
+	    # emacs-gtk
+	    # # ppsspp
+	    # # nyxt
+	    # 
     ];
   };
+
+  # exwm
+  # programs.slock.enable = true;
+
+  # wayfire
+  # programs.wayfire = {
+  #   enable = true;
+  #   plugins = with pkgs.wayfirePlugins; [
+  #     wcm
+  #     wf-shell
+  #     wayfire-plugins-extra
+  #   ];
+  # };
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     # system tools
-    unstable.neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    unstable.wget
-    unstable.nodejs
-    unstable.ttyd
+    neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    wget
+    nodejs
+    # unstable.ttyd
+    # blackbox-terminal
+    # unstable.gcc
+    cmake
 
     # gnome extensions
-    unstable.gnomeExtensions.appindicator
-    unstable.gnomeExtensions.useless-gaps
-    unstable.gnomeExtensions.transparent-top-panel
-    unstable.gnomeExtensions.dash-to-panel
-
-    #vscode + extensions
-    unstable.vscode
-    unstable.vscode-with-extensions
-    (vscode-with-extensions.override {
-      vscodeExtensions = with vscode-extensions; [
-        vscodevim.vim
-      ];
-    })
+    gnome.gnome-tweaks
+    gnomeExtensions.appindicator
+    # gnomeExtensions.myhiddentopbar
+    lm_sensors
+    
 
     # steam stuff
-    unstable.protonup-ng
+    # unstable.protonup-ng
+
+    # exwm
+    # rofi
+    # networkmanagerapplet
+    # brightnessctl
+    # alsa-utils
+    # scrot
+    # slock
+    # # upower
+    # tlp
+    # playerctl
+    # pavucontrol
+    # pasystray
+    
+
+    # i3
+    # nitrogen
+    # rofi
+    # xfce.xfce4-panel
+    # xfce.xfce4-pulseaudio-plugin
+    # xfce.xfce4-power-manager
+    # xfce.xfce4-i3-workspaces-plugin
+    # xfce.xfce4-power-manager
+    # btop
+    # pfetch
+    # autotiling
+    # xorg.setxkbmap
+
+    # hyprland stuff
+    wofi
+    polkit_gnome
+    hyprpaper
+    waybar
+    mako
+    kitty
+    sway
+    libsForQt5.polkit-kde-agent
+    waylock
+    pulseaudio
+    networkmanagerapplet
+    pasystray
+    pavucontrol
+    xfce.thunar
+    brightnessctl
+    grim
+    slurp
+    networkmanager
   ];
 
+  # attempt at getting workspaces working in waybar
+  # nixpkgs.overlays = [
+  # (self: super: {
+  #   waybar = super.waybar.overrideAttrs (oldAttrs: {
+  #     mesonFlags = oldAttrs.mesonFlags ++ [ "-Dexperimental=true" ];
+  #   });
+  # })
+  # ];
+
+  # add bash alias
+  programs.bash.shellAliases = {
+    # icat = "kitty +kitten icat";
+    matrixlisten = "matrix-commander --listen forever --os-notify --listen-self &";
+    matrixsend = "matrix-commander -m ";
+  };
+
   # download fonts
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
+    font-awesome
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
@@ -151,15 +317,15 @@ in
   ];
 
   # make steam work
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = true;
-  };
+  #programs.steam = {
+  #  enable = true;
+  #  remotePlay.openFirewall = true;
+  #  dedicatedServer.openFirewall = true;
+  #};
 
   #nvidia drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.opengl.enable = true;
+  #services.xserver.videoDrivers = [ "nvidia" ];
+  #hardware.opengl.enable = true;
 
   # enable flatpaks
   #services.flatpak.enable = true;
