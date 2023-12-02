@@ -130,7 +130,7 @@ in
     # name = "Capitaine Cursors";
     # };
 
-    # home.file.".config/nvim/init.lua".source=./nvim.lua;
+    home.file.".config/nvim/init.lua".source=./nvim.lua;
 
   };
 }
