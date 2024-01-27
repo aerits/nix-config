@@ -104,6 +104,7 @@
 *** https://invidious.tiekoetter.com/feed/channel/UCaq-0QLeMasYuCtF7AJs8IQ
 *** https://invidious.flokinet.to/feed/channel/UCBa659QWEk1AI4Tg--mrJ2A
 *** https://invidious.flokinet.to/feed/channel/UC9RM-iSvTu1uPJb8X5yp3EQ
+*** https://invidious.flokinet.to/feed/channel/UCxxw51w9d_utTp0VNyyG9IA
 ** Vocaloid                                                         :vocaloid:
 *** https://invidious.flokinet.to/feed/channel/UCG09qajPDZdPtLsTkW7mJQA 
 *** https://invidious.flokinet.to/feed/channel/UCRBoU6qW6B6o9Z7jQAJ5YGQ 

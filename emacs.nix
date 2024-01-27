@@ -2,8 +2,6 @@
 {
   # ...
 
-  imports = [ ./cachix.nix ];
-
   nixpkgs.overlays = [
     (import (
       let

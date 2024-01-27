@@ -6,13 +6,24 @@
     QT_QPA_PLATFORM_PLUGIN_PATH = "${pkgs.qt5.qtbase.bin.outPath}/lib/qt-${pkgs.qt5.qtbase.version}/plugins";
   };
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "nodejs-16.20.2"
+  ];
+  
   home-manager.users.diced = {
     home.packages = with pkgs; [
       # coding
       git
       nodejs
-      sbcl
+      # sbcl
       openjdk
+      rustc
+      cargo
+      cmake
+      rust-analyzer
+
+      # cloudflared
+      # code-server
 
       # android
       android-tools
@@ -55,7 +66,10 @@
       nil
 
       # latex
-      texlive.combined.scheme-full
+      # texlive.combined.scheme-full
+
+      # typst
+      # typst
 
       # for dirvish
       fd
@@ -72,11 +86,12 @@
       distrobox
 
       # ide
-      vscode
+      # vscode
+      # godot_4
 
       # vnc
-      turbovnc
+      # turbovnc
     ];
     
-  };
+};
 }

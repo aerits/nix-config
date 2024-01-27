@@ -8,7 +8,7 @@
     [ (modulesPath + "/installer/scan/not-detected.nix")
     ];
 
-  boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usbhid" "usb_storage" "sd_mod" ];
+  boot.initrd.availableKernelModules = [ "xhci_pci" "ehci_pci" "ahci" "usbhid" "uas" "usb_storage" "sd_mod" ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
@@ -18,11 +18,26 @@
       fsType = "ext4";
     };
 
-  boot.initrd.luks.devices."luks-2dc3f1d6-9792-4100-97f7-77a2af744909".device = "/dev/disk/by-uuid/2dc3f1d6-9792-4100-97f7-77a2af744909";
+  boot.initrd.luks.devices."secure".device = "/dev/disk/by-uuid/2dc3f1d6-9792-4100-97f7-77a2af744909";
+
+  fileSystems."/mnt/drive2" =
+    { device = "/dev/disk/by-uuid/f298427e-1131-4605-844f-624c7cb17eaa";
+      fsType = "ext4";
+    };
 
   fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/E10E-5021";
       fsType = "vfat";
+    };
+
+  fileSystems."/home" =
+    { device = "/dev/sdj2";
+      fsType = "ext4";
+    };
+
+  fileSystems."/mnt/drive1" =
+    { device = "/dev/sdj1";
+      fsType = "btrfs";
     };
 
   swapDevices = [ ];
@@ -32,12 +47,10 @@
   # still possible to use this option, but it's recommended to use it in conjunction
   # with explicit per-interface declarations with `networking.interfaces.<interface>.useDHCP`.
   networking.useDHCP = lib.mkDefault true;
-  # networking.interfaces.enp3s0.useDHCP = lib.mkDefault true;
-  # networking.interfaces.wlp4s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.enp5s0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.tailscale0.useDHCP = lib.mkDefault true;
+  # networking.interfaces.wlp6s0.useDHCP = lib.mkDefault true;
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-  # high-resolution display
-  # OBSELETE
-  # hardware.video.hidpi.enable = lib.mkDefault true;
 }

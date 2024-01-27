@@ -14,6 +14,16 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; packages ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; usepacakge bind
+(use-package bind-key
+  :demand t
+  :bind
+  (:prefix-map rab/files-map
+	       :prefix "C-c f")
+  :bind
+  (:prefix-map rab/toggles-map
+	       :prefix "C-c t"))
+
 ;; dash ;;
 (use-package dashboard
   :ensure t
@@ -23,24 +33,6 @@
                         (bookmarks . 5)
                         (projects . 5)
                         (agenda . 5)))
-
-;; tabs ;;
-(use-package centaur-tabs
-  :ensure t
-  :demand
-  :config
-  (centaur-tabs-mode t)
-  (setq centaur-tabs-label-fixed-length 15)
-  :bind
-  ("C-x c p" . centaur-tabs-backward)
-  ("C-x c n" . centaur-tabs-forward))
-(global-set-key (kbd "C-x c p") 'centaur-tabs-backward)
-(global-set-key (kbd "C-x c n") 'centaur-tabs-forward)
-(setq centaur-tabs-cycle-scope 'tabs)
-(global-set-key (kbd "C-x c g") 'centaur-tabs-toggle-groups)
-(global-set-key (kbd "C-x c s") 'centaur-tabs-switch-group)
-
-(setq centaur-tabs-style "bar")
 
 ;; fuzzy search ;;
 ;; Enable vertico
@@ -94,25 +86,17 @@
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 
-;; powerline ;;
-;; (use-package powerline
-;;   :ensure t)
-;; (powerline-default-theme)
-(use-package telephone-line
-  :ensure t)
-;; (telephone-line-mode 1)
-(use-package mood-line
-  :ensure t)
-(mood-line-mode)
+;; enhance vertico
+(use-package orderless
+  :ensure t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; dim fake buffers ;;
-(use-package solaire-mode
-  :ensure t)
-(solaire-global-mode +1)
-
-;; literate calc mode ;;
-(use-package literate-calc-mode
-  :ensure t)
+;; line
+(use-package doom-modeline
+  :ensure t
+  :init (doom-modeline-mode 1))
 
 ;; keep code indented ;;
 (use-package aggressive-indent
@@ -125,14 +109,7 @@
 (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
 (setq highlight-indent-guides-method 'character)
 
-;; highlight symbols ;;
-(use-package idle-highlight-mode
-  :ensure t
-  :config (setq idle-highlight-idle-time 0.2))
-  ;; :hook ((prog-mode text-mode) . idle-highlight-mode))
-
 ;; multiple cursors ;;
-
 (use-package multiple-cursors
   :ensure t)
 ;; add multiple cursors to all selected lines
@@ -142,18 +119,6 @@
 (global-set-key (kbd "C->") 'mc/mark-next-like-this)
 (global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
 (global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
-
-;; real clipboard ;;
-(use-package simpleclip
-  :ensure t)
-(simpleclip-mode 1)
-;; use s-c, s-x, s-v
-
-;; drag stuff ;;
-(use-package drag-stuff
-  :ensure t)
-(drag-stuff-global-mode 1)
-(drag-stuff-define-keys)
 
 ;; capitalize and lowercase words;;
 (use-package fix-word
@@ -186,32 +151,14 @@
 (use-package pdf-tools
   :ensure t)
 
-;; hide emacs recover session files
-;; (defun enable-dired-omit-mode () (dired-omit-mode 1))
-;; (add-hook 'dired-mode-hook 'enable-dired-omit-mode)
-
-(defadvice recover-session (around disable-dired-omit-for-recover activate)
-  (let ((dired-mode-hook dired-mode-hook))
-    (remove-hook 'dired-mode-hook 'enable-dired-omit-mode)
-    ad-do-it))
-
-;; toggle showing dot files
-(defun dired-dotfiles-toggle ()
-  "Show/hide dot-files"
-  (interactive)
-  (when (equal major-mode 'dired-mode)
-    (if (or (not (boundp 'dired-dotfiles-show-p)) dired-dotfiles-show-p) ; if currently showing
-	(progn 
-	  (set (make-local-variable 'dired-dotfiles-show-p) nil)
-	  (message "h")
-	  (dired-mark-files-regexp "^\\\.")
-	  (dired-do-kill-lines))
-      (progn (revert-buffer) ; otherwise just revert to re-show
-	     (set (make-local-variable 'dired-dotfiles-show-p) t)))))
-
 ;; magit ;;
 (use-package magit
-  :ensure t)
+  :ensure t
+  :bind
+  (
+   ("<f12>" . magit-status)
+   )
+  )
 
 ;; good terminal;;
 (use-package vterm
@@ -235,55 +182,84 @@
 (use-package flycheck
   :ensure t
   :init (global-flycheck-mode))
+
 ;; lsp ;;
-(use-package eglot
+;; (use-package eglot
+;;   :ensure t
+;;   :hook
+;;   ((python-mode . eglot-ensure)
+;;    (nix-mode . eglot-ensure))
+;;   (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
+;;   :hook
+;;   (nix-mode . eglot-ensure))
+
+;; lsp ;;
+(use-package lsp-mode
   :ensure t
-  :hook
-  ((python-mode . eglot-ensure)
-   (nix-mode . eglot-ensure))
-  (add-to-list 'eglot-server-programs '(nix-mode . ("nil")))
-  :hook
-  (nix-mode . eglot-ensure))
+  :init
+  ;; set prefix for lsp-command-keymap (few alternatives - "C-l", "C-c l")
+  (setq lsp-keymap-prefix "C-c l")
+  :hook (;; replace XXX-mode with concrete major-mode(e. g. python-mode)
+         (rust-mode . lsp)
+         ;; if you want which-key integration
+         (lsp-mode . lsp-enable-which-key-integration))
+  :commands lsp)
+
+;; optionally
+(use-package lsp-ui
+  :ensure t
+  :commands lsp-ui-mode)
+
+;; The path to lsp-mode needs to be added to load-path as well as the
+;; path to the `clients' subdirectory.
+(add-to-list 'load-path (expand-file-name "lib/lsp-mode" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "lib/lsp-mode/clients" user-emacs-directory))
+
 ;; code completion ;;
-(use-package corfu
-  :ensure t
-  ;; Optional customizations
-  :custom
-  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
-  ;; (corfu-separator ?\s)          ;; Orderless field separator
-  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
-  ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
-  (corfu-preview-current nil)    ;; Disable current candidate preview
-  ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
-  ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
-  ;; (corfu-scroll-margin 5)        ;; Use scroll margin
+(use-package company
+  :ensure t)
 
-  ;; Enable Corfu only for certain modes.
-  ;; :hook ((prog-mode . corfu-mode)
-  ;;        (shell-mode . corfu-mode)
-  ;;        (eshell-mode . corfu-mode))
 
-  ;; Recommended: Enable Corfu globally.
-  ;; This is recommended since Dabbrev can be used globally (M-/).
-  ;; See also `corfu-exclude-modes'.
-  :init
-  (global-corfu-mode))
+;; code completion ;;
+;; (use-package corfu
+;;   :ensure t
+;;   ;; Optional customizations
+;;   :custom
+;;   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+;;   (corfu-auto t)                 ;; Enable auto completion
+;;   ;; (corfu-separator ?\s)          ;; Orderless field separator
+;;   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+;;   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
+;;   (corfu-preview-current nil)    ;; Disable current candidate preview
+;;   ;; (corfu-preselect 'prompt)      ;; Preselect the prompt
+;;   ;; (corfu-on-exact-match nil)     ;; Configure handling of exact matches
+;;   ;; (corfu-scroll-margin 5)        ;; Use scroll margin
 
-;; A few more useful configurations...
-(use-package emacs
-  :init
-  ;; TAB cycle if there are only few candidates
-  (setq completion-cycle-threshold 3)
+;;   ;; Enable Corfu only for certain modes.
+;;   ;; :hook ((prog-mode . corfu-mode)
+;;   ;;        (shell-mode . corfu-mode)
+;;   ;;        (eshell-mode . corfu-mode))
 
-  ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
-  ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
-  ;; (setq read-extended-command-predicate
-  ;;       #'command-completion-default-include-p)
+;;   ;; Recommended: Enable Corfu globally.
+;;   ;; This is recommended since Dabbrev can be used globally (M-/).
+;;   ;; See also `corfu-exclude-modes'.
+;;   :init
+;;   (global-corfu-mode))
 
-  ;; Enable indentation+completion using the TAB key.
-  ;; `completion-at-point' is often bound to M-TAB.
-  (setq tab-always-indent 'complete))
+;; ;; A few more useful configurations...
+;; (use-package emacs
+;;   :init
+;;   ;; TAB cycle if there are only few candidates
+;;   (setq completion-cycle-threshold 3)
+
+;;   ;; Emacs 28: Hide commands in M-x which do not apply to the current mode.
+;;   ;; Corfu commands are hidden, since they are not supposed to be used via M-x.
+;;   ;; (setq read-extended-command-predicate
+;;   ;;       #'command-completion-default-include-p)
+
+;;   ;; Enable indentation+completion using the TAB key.
+;;   ;; `completion-at-point' is often bound to M-TAB.
+;;   (setq tab-always-indent 'complete))
 
 ;; tree sitter
 (use-package tree-sitter
@@ -292,20 +268,6 @@
   :ensure t)
 (use-package tree-sitter-indent
   :ensure t)
-
-;; rainbow () [] {} to make it easier to read
-(use-package rainbow-delimiters
-  :ensure t)
-
-;; icons ;;
-(use-package nerd-icons
-  :ensure t
-  ;; :custom
-  ;; The Nerd Font you want to use in GUI
-  ;; "Symbols Nerd Font Mono" is the default and is recommended
-  ;; but you can use any other Nerd Font if you want
-  ;; (nerd-icons-font-family "Symbols Nerd Font Mono")
-  )
 
 ;; latex preview
 (use-package auctex
@@ -333,135 +295,62 @@
           #'TeX-revert-document-buffer)
 
 ;; emacs multimedia
-(use-package emms
-  :ensure t)
-(emms-all)
-(setq emms-player-list '(emms-player-mpv)
-      emms-info-functions '(emms-info-native))
+;; (use-package emms
+;;   :ensure t)
+;; (emms-all)
+;; (setq emms-player-list '(emms-player-mpv)
+;;       emms-info-functions '(emms-info-native))
 
-(use-package meow
-  :ensure t)
-(defun meow-setup ()
-  (setq meow-cheatsheet-layout meow-cheatsheet-layout-qwerty)
-  (meow-motion-overwrite-define-key
-   '("j" . meow-next)
-   '("k" . meow-prev)
-   '("<escape>" . ignore))
-  (meow-leader-define-key
-   ;; SPC j/k will run the original command in MOTION state.
-   '("j" . "H-j")
-   '("k" . "H-k")
-   ;; Use SPC (0-9) for digit arguments.
-   '("1" . meow-digit-argument)
-   '("2" . meow-digit-argument)
-   '("3" . meow-digit-argument)
-   '("4" . meow-digit-argument)
-   '("5" . meow-digit-argument)
-   '("6" . meow-digit-argument)
-   '("7" . meow-digit-argument)
-   '("8" . meow-digit-argument)
-   '("9" . meow-digit-argument)
-   '("0" . meow-digit-argument)
-   '("/" . meow-keypad-describe-key)
-   '("?" . meow-cheatsheet))
-  (meow-normal-define-key
-   ;; SELF CONFIG FOR MEOW NORMAL MODE
-   '("/" . enlarge-window)
-   '("?" . enlarge-window-horizontally)
-   ;; DEFAULT CONFIG FOR MEOW NORMAL MODE
-   '("0" . meow-expand-0)
-   '("9" . meow-expand-9)
-   '("8" . meow-expand-8)
-   '("7" . meow-expand-7)
-   '("6" . meow-expand-6)
-   '("5" . meow-expand-5)
-   '("4" . meow-expand-4)
-   '("3" . meow-expand-3)
-   '("2" . meow-expand-2)
-   '("1" . meow-expand-1)
-   '("-" . negative-argument)
-   '(";" . meow-reverse)
-   '("," . meow-inner-of-thing)
-   '("." . meow-bounds-of-thing)
-   '("[" . meow-beginning-of-thing)
-   '("]" . meow-end-of-thing)
-   '("a" . meow-append)
-   '("A" . meow-open-below)
-   '("b" . meow-back-word)
-   '("B" . meow-back-symbol)
-   '("c" . meow-change)
-   '("d" . meow-delete)
-   '("D" . meow-backward-delete)
-   '("e" . meow-next-word)
-   '("E" . meow-next-symbol)
-   '("f" . meow-find)
-   '("g" . meow-cancel-selection)
-   '("G" . meow-grab)
-   '("h" . meow-left)
-   '("H" . meow-left-expand)
-   '("i" . meow-insert)
-   '("I" . meow-open-above)
-   '("j" . meow-next)
-   '("J" . meow-next-expand)
-   '("k" . meow-prev)
-   '("K" . meow-prev-expand)
-   '("l" . meow-right)
-   '("L" . meow-right-expand)
-   '("m" . meow-join)
-   '("n" . meow-search)
-   '("o" . meow-block)
-   '("O" . meow-to-block)
-   '("p" . meow-yank)
-   '("q" . meow-quit)
-   '("Q" . meow-goto-line)
-   '("r" . meow-replace)
-   '("R" . meow-swap-grab)
-   '("s" . meow-kill) 
-   '("t" . meow-till)
-   '("u" . meow-undo)
-   '("U" . meow-undo-in-selection)
-   '("v" . meow-visit)
-   '("w" . meow-mark-word)
-   '("W" . meow-mark-symbol)
-   '("x" . meow-line)
-   '("X" . meow-goto-line)
-   '("y" . meow-save)
-   '("Y" . meow-sync-grab)
-   '("z" . meow-pop-selection)
-   '("'" . repeat)
-   '("<escape>" . ignore)))
-(meow-setup)
-(meow-global-mode 1)
+;; modal editing
+;; (use-package god-mode
+;;   :ensure t
+;;   :config
+;;   (global-set-key (kbd "<escape>") #'god-local-mode)
+;;   (define-key god-local-mode-map (kbd ".") #'repeat)
+;;   (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+;;   (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+;;   (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+;;   (global-set-key (kbd "C-x C-2") #'split-window-below)
+;;   (global-set-key (kbd "C-x C-3") #'split-window-right)
+;;   (global-set-key (kbd "C-x C-0") #'delete-window)
+;;
+;;   (require 'god-mode-isearch)
+;;   (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
+;;   (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable))
 
-(with-eval-after-load 'org (global-org-modern-mode))
-
-;; better window navigation
-;; (global-set-key "\s-j" windmove-left)
-;; (global-set-key "\s-k" windmove-down)
-;; (global-set-key "\s-l" windmove-up)
-;; (global-set-key "\s-;" windmove-right)
-
-;; emacs-everywhere
-(use-package emacs-everywhere
-  :ensure t)
-
-;; edit with emacs in firefox
-(use-package edit-server
+(use-package evil
   :ensure t
-  :commands edit-server-start
-  :init (if after-init-time
-            (edit-server-start)
-          (add-hook 'after-init-hook
-                    #'(lambda() (edit-server-start))))
-  :config (setq edit-server-new-frame-alist
-                '((name . "Edit with Emacs FRAME")
-                  (top . 200)
-                  (left . 200)
-                  (width . 80)
-                  (height . 25)
-                  (minibuffer . t)
-                  (menu-bar-lines . t)
-                  (window-system . x))))
+  :init
+  (setq evil-disable-insert-state-bindings t)
+
+  :custom
+  (evil-motion-state-modes nil)
+  (evil-default-state 'emacs)
+
+  :config
+  ;; (defalias 'evil-insert-state 'evil-emacs-state)
+  (setcdr evil-insert-state-map nil)
+  (define-key evil-insert-state-map
+	      (read-kbd-macro evil-toggle-key) 'evil-emacs-state)
+  (define-key evil-insert-state-map [escape] 'evil-normal-state)
+  
+  (evil-mode 1))
+
+(use-package consult
+  :ensure t
+  :bind (
+	 ("<f5>" . consult-recent-file)
+	 ))
+
+;; windmove
+(when (fboundp 'windmove-default-keybindings)
+  (windmove-default-keybindings))
+
+;; show keys
+(use-package which-key
+  :ensure t
+  :config
+  (which-key-enable-god-mode-support))
 
 ;; read epubs
 (use-package nov
@@ -470,18 +359,18 @@
   (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode)))
 
 ;; eaf
-(use-package eaf
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
-  :config
-  (require 'eaf-browser)
-  (require 'eaf-video-player)
-  (defun eaf-goto-right-tab ()
-    (centaur-tabs-forward))
-  (defun eaf-goto-left-tab ()
-    (centaur-tabs-backward))
-  (setq eaf-browser-continue-where-left-off t)
-  (setq eaf-browser-default-search-engine "duckduckgo")
-  )
+;; (use-package eaf
+;;   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+;;   :config
+;;   (require 'eaf-browser)
+;;   (require 'eaf-video-player)
+;;   (defun eaf-goto-right-tab ()
+;;     (centaur-tabs-forward))
+;;   (defun eaf-goto-left-tab ()
+;;     (centaur-tabs-backward))
+;;   (setq eaf-browser-continue-where-left-off t)
+;;   (setq eaf-browser-default-search-engine "duckduckgo")
+;;   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; org mode ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -493,6 +382,21 @@
 (use-package org-modern
   :ensure t)
 
+(setq org-agenda-files (list "/home/diced/Documents/school files/12th grade/todo.org"))
+
+(global-set-key (kbd "C-c l") #'org-store-link)
+
+;; insert images
+(use-package org-download
+  :ensure t)
+(require 'org-download)
+
+;; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+
+;; increase size of latex previews
+(setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
+
 ;; org babel
 (add-to-list 'load-path "~/.emacs.d/site-lisp/ob-nix")
 (org-babel-do-load-languages
@@ -501,65 +405,166 @@
    (shell . t)
    (nix . t)))
 
+(use-package org-fragtog
+  :ensure t)
+
+(setq org-startup-with-latex-preview t)
+
+(use-package org-variable-pitch
+  :ensure t
+  :config
+  (add-hook 'org-mode-hook 'org-variable-pitch-minor-mode))
+
+;; (setq elfeed-sort-order 'ascending)
+;; (global-set-key (kbd "C-'") 'avy-goto-char-timer)
+;; (global-set-key (kbd "C-:") 'avy-goto-char)
+;; (global-set-key (kbd "M-'") 'avy-goto-line)
+
+;; (run-at-time 5 (* 60 10) 'elfeed-update)
+
+;; drawing svgs
+
+(add-to-list 'load-path "~/.emacs.d/site-lisp/el-easydraw")
+
+(with-eval-after-load 'org
+  (require 'edraw-org)
+  (edraw-org-setup-default))
+;; When using the org-export-in-background option (when using the
+;; asynchronous export function), the following settings are
+;; required. This is because Emacs started in a separate process does
+;; not load org.el but only ox.el.
+(with-eval-after-load "ox"
+  (require 'edraw-org)
+  (edraw-org-setup-exporter))
+
+(use-package obsidian
+  :ensure t
+  :demand t
+  :config
+  (obsidian-specify-path "/home/diced/Documents/school files/12th grade/")
+  (global-obsidian-mode t)
+  :custom
+  ;; This directory will be used for `obsidian-capture' if set.
+  (obsidian-inbox-directory "Inbox")
+  :bind (:map obsidian-mode-map
+	      ;; Replace C-c C-o with Obsidian.el's implementation. It's ok to use another key binding.
+	      ("C-c C-o" . obsidian-follow-link-at-point)
+	      ;; Jump to backlinks
+	      ("C-c C-b" . obsidian-backlink-jump)
+	      ;; If you prefer you can use `obsidian-insert-link'
+	      ("C-c C-l" . obsidian-insert-wikilink)))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; elfeed ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(use-package elfeed
-  :ensure t)
-(global-set-key (kbd "C-x w") 'elfeed)
-(setf url-queue-timeout 30)
-(use-package elfeed-org
-  :ensure t)
-(elfeed-org)
-(setq rmh-elfeed-org-files (list "/etc/nixos/elfeed.org"))
+;; (use-package elfeed
+;;   :ensure t)
+;; (global-set-key (kbd "C-x w") 'elfeed)
+;; (setf url-queue-timeout 30)
+;; (use-package elfeed-org
+;;   :ensure t)
+;; (elfeed-org)
+;; (setq rmh-elfeed-org-files (list "/etc/nixos/elfeed.org"))
+
+;; (defun elfeed-save-and-reload ()
+;;   (interactive)
+;;   (progn (elfeed-db-unload)
+;; 	 (elfeed-update)
+;; 	 (elfeed-db-save)))
+
+;; (define-key elfeed-search-mode-map "t" 'elfeed-save-and-reload)
+
+;; (setq httpd-host "0.0.0.0")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; custom funcs ;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; better novelupdates rss - mark novelupdates chapters fromm elfeed as read
 ;; get out of here flycheck smh this is good code
-(defun nu-read ()
-  "mark novelupdates chapter as read
-  in the elfeed entry and navigate
-  to the chapter in eww"
-  (interactive)
-  (progn (re-search-forward "novelupdates.com/series")
-	 (setq series (thing-at-point 'url))
-	 ;; (message series)
-	 (re-search-backward "novelupdates.com/extnu")
-	 (setq chapter (thing-at-point 'url))
-	 ;; (message chapter)
-	 (message
-	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
-					   (concat series
-						   (concat " " chapter)))))
-	 (eww (thing-at-point 'url))))
-(defun nu-read-eaf ()
-  "same thing as last function
-  except do it with eaf's browser"
-  (interactive)
-  (progn (re-search-forward "novelupdates.com/series")
-	 (setq series (thing-at-point 'url))
-	 ;; (message series)
-	 (re-search-backward "novelupdates.com/extnu")
-	 (setq chapter (thing-at-point 'url))
-	 ;; (message chapter)
-	 (message
-	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
-					   (concat series
-						   (concat " " chapter)))))
-	 (eaf-open-browser (thing-at-point 'url))))
-(defun nu-mark-read ()
-  "do the same thing as the last
-  function except without eww"
-  (interactive)
-  (progn (re-search-forward "novelupdates.com/series")
-	 (setq series (thing-at-point 'url))
-	 ;; (message series)
-	 (re-search-backward "novelupdates.com/extnu")
-	 (setq chapter (thing-at-point 'url))
-	 ;; (message chapter)
-	 (message
-	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
-					   (concat series
-						   (concat " " chapter)))))))
+;; (defun nu-read ()
+;;   "mark novelupdates chapter as read
+;;   in the elfeed entry and navigate
+;;   to the chapter in eww"
+;;   (interactive)
+;;   (progn (re-search-forward "novelupdates.com/series")
+;; 	 (setq series (thing-at-point 'url))
+;; 	 ;; (message series)
+;; 	 (re-search-backward "novelupdates.com/extnu")
+;; 	 (setq chapter (thing-at-point 'url))
+;; 	 ;; (message chapter)
+;; 	 (message
+;; 	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
+;; 					   (concat series
+;; 						   (concat " " chapter)))))
+;; 	 (eww (thing-at-point 'url))))
+;; (defun nu-read-eaf ()
+;;   "same thing as last function
+;;   except do it with eaf's browser"
+;;   (interactive)
+;;   (progn (re-search-forward "novelupdates.com/series")
+;; 	 (setq series (thing-at-point 'url))
+;; 	 ;; (message series)
+;; 	 (re-search-backward "novelupdates.com/extnu")
+;; 	 (setq chapter (thing-at-point 'url))
+;; 	 ;; (message chapter)
+;; 	 (message
+;; 	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
+;; 					   (concat series
+;; 						   (concat " " chapter)))))
+;; 	 (eaf-open-browser (thing-at-point 'url))))
+;; (defun nu-mark-read ()
+;;   "do the same thing as the last
+;;   function except without eww"
+;;   (interactive)
+;;   (progn (re-search-forward "novelupdates.com/series")
+;; 	 (setq series (thing-at-point 'url))
+;; 	 ;; (message series)
+;; 	 (re-search-backward "novelupdates.com/extnu")
+;; 	 (setq chapter (thing-at-point 'url))
+;; 	 ;; (message chapter)
+;; 	 (message
+;; 	  (shell-command-to-string (concat "python ~/Documents/git/better-novelupdates-rss/src/main.py "
+;; 					   (concat series
+;; 						   (concat " " chapter)))))))
+
+(defun my-insert-file-name (filename &optional args)
+  "Insert name of file FILENAME into buffer after point.
+  
+  Prefixed with \\[universal-argument], expand the file name to
+  its fully canocalized path.  See `expand-file-name'.
+  
+  Prefixed with \\[negative-argument], use relative path to file
+  name from current directory, `default-directory'.  See
+  `file-relative-name'.
+  
+  The default with no prefix is to insert the file name exactly as
+  it appears in the minibuffer prompt."
+  ;; Based on insert-file in Emacs -- ashawley 20080926
+  (interactive "*fInsert file name: \nP")
+  (cond ((eq '- args)
+         (insert (file-relative-name filename)))
+        ((not (null args))
+         (insert (expand-file-name filename)))
+        (t
+         (insert filename))))
+
+(global-set-key "\C-c\C-i" 'my-insert-file-name)
+
+;; make it easier to watch youtube in elfeed -- based on browse-url-chrome
+
+(defun browse-url-mpv (url &optional _new-window)
+  "Ask the MPV browser to load URL.
+Default to the URL around or before point. 
+The optional argument NEW-WINDOW is not used."
+  (interactive (browse-url-interactive-arg "URL: "))
+  (setq url (browse-url-encode-url url))
+  (let* ((process-environment (browse-url-process-environment)))
+    (apply #'start-process
+	   (concat "mpv " url) nil
+	   "mpv"
+	   (list url))))
+
+(setq browse-url-handlers
+      '(("invidious.flokinet.to" . browse-url-mpv)
+	("." . browse-url-default-browser)))
+
 
 
 
@@ -574,34 +579,32 @@
 ;; (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
 ;; (set-face-attribute 'org-modern-symbol nil :family "Iosevka")
 
-;; ;; moe theme
-;; (use-package moe-theme
-;;   :ensure t)
-;; (load-theme 'moe-light t)
+;; update changed files
+(global-auto-revert-mode)
 
 ;; spacemacs theme
-(use-package spacemacs-theme
-  :ensure t)
-(load-theme 'spacemacs-light)
-
-;; (use-package poet-theme
+;; (use-package spacemacs-theme
 ;;   :ensure t)
-;; (load-theme 'poet t)
-;; (add-hook 'text-mode-hook
-;;           (lambda ()
-;;             (variable-pitch-mode 1)))
-;; (set-face-attribute 'default nil :family "DejaVu Sans Mono")
-;; (set-face-attribute 'fixed-pitch nil :family "DejaVu Sans Mono")
-;; (set-face-attribute 'variable-pitch nil :family "NotoSerif")
+;; (load-theme 'spacemacs-light)
+
+(use-package catppuccin-theme
+  :ensure t
+  :config
+  (setq catppuccin-flavor 'latte)
+  (catppuccin-reload))
 
 ;; get rid of splash screen
 ;; and flash when the bell rings
 (setq inhibit-startup-message t
       visible-bell t)
 
+(keymap-global-set "C-x C-b" 'ibuffer)
+(keymap-global-set "C-x b" 'switch-to-buffer)
+
 ;; turn off menu ui
 (tool-bar-mode -1)
 (scroll-bar-mode -1)
+(context-menu-mode 1)
 
 ;; no more bad indenting
 ;;(electric-indent-mode -1)

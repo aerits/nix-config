@@ -9,13 +9,13 @@ let
   # fetchTarball
   # https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
 
-  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
-    export __NV_PRIME_RENDER_OFFLOAD=1
-    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-    export __GLX_VENDOR_LIBRARY_NAME=nvidia
-    export __VK_LAYER_NV_optimus=NVIDIA_only
-    exec "$@"
-  '';
+#  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
+#    export __NV_PRIME_RENDER_OFFLOAD=1
+#    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
+#    export __GLX_VENDOR_LIBRARY_NAME=nvidia
+#    export __VK_LAYER_NV_optimus=NVIDIA_only
+#    exec "$@"
+#  '';
 
 in
 { 
@@ -26,7 +26,7 @@ in
       ./emacs.nix
       ./code.nix
       ./nixgaming.nix
-      ./cachix.nix
+      # ./hyprland.nix
     ];
   
   # nixpkgs.config = {
@@ -36,6 +36,14 @@ in
   # };
   # };
   # };
+
+  nix.settings.auto-optimise-store = true;
+  nix.gc = {
+    automatic = true;
+    dates = "weekly";
+    options = "--delete-older-than 30d";
+  };
+
 
   # one of these commands is turning on flakes ig
   # nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -52,11 +60,19 @@ in
       systemd-boot.enable = true;
       efi = {
         canTouchEfiVariables = true;
-	      efiSysMountPoint = "/boot/efi";
+	efiSysMountPoint = "/boot/efi";
       };
+      #grub = {
+      #  efiSupport = true;
+#	device = "nodev";
+#      };
     };
 
     kernelPackages = pkgs.linuxPackages_zen;
+    kernelParams = [
+      "video=HDMI-A-1:1920x1080@60"
+      "video=HDMI-A-3:1920x1080@60"
+    ];
   };
 
   networking.hostName = "nixos"; # Define your hostname.
@@ -94,14 +110,21 @@ in
 
   # Enable the GNOME Desktop Environment.
   services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-tour
-    epiphany
-    gnome.geary
-    gnome.yelp
-    gnome-console
-  ]);
+  # services.xserver.desktopManager.gnome.enable = true;
+  # environment.gnome.excludePackages = (with pkgs; [
+  #   gnome-tour
+  #   epiphany
+  #   gnome.geary
+  #   gnome.yelp
+  #   gnome-console
+  # ]);
+
+  # kde
+  # services.xserver.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
+  services.xserver.displayManager.defaultSession = "plasmawayland";
+  programs.dconf.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-kde ];
 
   # Configure keymap in X11
   services.xserver = {
@@ -139,7 +162,7 @@ in
   services.syncthing = {
     enable = true;
     user = "diced";
-    dataDir = "home/diced/Documents";    # Default folder for new synced folders
+    dataDir = "/home/diced/Documents";    # Default folder for new synced folders
     configDir = "/home/diced/Documents/.config/syncthing";   # Folder for Syncthing's settings and keys
   };
 
@@ -181,34 +204,42 @@ in
     # system tools
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    ttyd
+    # ttyd
     unzip
     cron
 
+    steam
+    gamescope
+
     # for matrix
-    pantalaimon
+    # pantalaimon
 
     # google-drive-ocamlfuse # for google drive stuff
-    blackbox-terminal
+    # blackbox-terminal
 
-    steam
+    texlive.combined.scheme-medium
+
+    # kwallet-pam
 
     # gnome tweaks
-    gnome.gnome-tweaks
+    # gnome.gnome-tweaks
 
     # gnome extensions
-    gnomeExtensions.appindicator
-    gnomeExtensions.dash-to-panel
-
+    # gnomeExtensions.appindicator
+    # gnomeExtensions.dash-to-panel
+    # gnomeExtensions.gsconnect
+    
     # misc
-    vorta
+    # vorta
     ntfs3g
     prismlauncher-qt5
   ];
 
   # download fonts
   fonts.fonts = with pkgs; [
-    nerdfonts
+    cantarell-fonts
+    # nerdfonts
+    (nerdfonts.override { fonts = [ "SourceCodePro" ]; })
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
@@ -217,12 +248,18 @@ in
     wqy_zenhei # for steam to show cjk fonts
   ];
 
+  programs.gamescope = {
+    enable = true;
+  };
+
   #make steam work
-  # programs.steam = {
-  # enable = true;
-  # remotePlay.openFirewall = true;
-  # dedicatedServer.openFirewall = true;
-  # };
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    gamescopeSession.enable = true;
+  };
+  hardware.steam-hardware.enable = true;
 
   hardware.opengl.driSupport32Bit = true; 
 
@@ -232,15 +269,19 @@ in
   };
 
   #nvidia drivers
-  services.xserver.videoDrivers = [ "nvidia" ];
-  hardware.opengl.enable = true;
-  hardware.nvidia.modesetting.enable = true;
-  hardware.nvidia.prime = {
-    offload.enable = true;
-    nvidiaBusId = "PCI:1:0:0";
+  #services.xserver.videoDrivers = [ "nvidia" ];
+  #hardware.opengl.enable = true;
+  #hardware.nvidia.modesetting.enable = true;
+  #hardware.nvidia.prime = {
+  #  offload.enable = true;
+  #  nvidiaBusId = "PCI:1:0:0";
+  #
+  #    intelBusId = "PCI:0:02:0";
+  #  };
 
-    intelBusId = "PCI:0:02:0";
-  };
+  # amd drivers
+  boot.initrd.kernelModules = [ "amdgpu" ];
+  services.xserver.videoDrivers = [ "amdgpu" ];
 
   # enable flatpaks
   services.flatpak.enable = true;

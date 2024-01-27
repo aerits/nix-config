@@ -39,13 +39,14 @@ in
 
     home.packages = with pkgs; [
       # internet
-      mullvad-browser
-      tetrio-desktop
+      # mullvad-browser
+      # tetrio-desktop
       librewolf
-      brave
+      thunderbird
+      # brave
       tor-browser-bundle-bin
       qbittorrent
-      ani-cli
+      # ani-cli
 
       # chat
       teamspeak_client
@@ -56,37 +57,38 @@ in
       # media
       mpv
 
+      appimage-run
+
       # gaming
-      osu-lazer-bin
-      rpcs3
       protonup-ng
 
       # videos
-      kdenlive
       obs-studio
       audacity
+      openutau
 
       # misc
-      qemu
+      # qemu
       anki-bin
-      pfetch
+      # pfetch
       keepassxc
-      foliate
+      # foliate
       krita
+      opentabletdriver
 
       # temrinal apps
-      ytfzf
-      cmus
+      # ytfzf
+      # cmus
       yt-dlp
-      ytmdl
+      # ytmdl
       w3m
 
       # emacs-everywhere
       wl-clipboard
-      ydotool
-      xdotool
-      xorg.xprop
-      xorg.xwininfo
+      # ydotool
+      # xdotool
+      # xorg.xprop
+      # xorg.xwininfo
     ];
 
     programs.git = {
@@ -105,9 +107,10 @@ in
     };
 
     home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
-    home.file.".config/nvim/init.lua".source=./nvim.lua;
+    # home.file.".config/nvim/init.lua".source=./nvim.lua;
     home.file.".config/mpv/scripts".source=./mpv/scripts;
     home.file.".config/mpv/script-opts".source=./mpv/script-opts;
+    home.file.".config/mpv/mpv.conf".source=./mpv/mpv.conf;
 
   };
 }

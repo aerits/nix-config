@@ -11,101 +11,149 @@ end
 
 local packer_bootstrap = ensure_packer()
 
-vim.cmd[[colorscheme NeoSolarized]]
-
-require('bufferline').setup({
-  options = {
-    mode = 'buffers',
-    offsets = {
-      {filetype = 'NvimTree'}
+require("catppuccin").setup({
+    flavour = "latte", -- latte, frappe, macchiato, mocha
+    background = { -- :h background
+        light = "latte",
+        dark = "mocha",
     },
-  },
-  highlights = {
-    buffer_selected = {
-      italic = false
+    transparent_background = false, -- disables setting the background color.
+    show_end_of_buffer = false, -- shows the '~' characters after the end of buffers
+    term_colors = false, -- sets terminal colors (e.g. `g:terminal_color_0`)
+    dim_inactive = {
+        enabled = false, -- dims the background color of inactive window
+        shade = "dark",
+        percentage = 0.15, -- percentage of the shade to apply to the inactive window
     },
-    indicator_selected = {
-      fg = {attribute = 'fg', highlight = 'Function'},
-      italic = false
-    }
-  }
+    no_italic = false, -- Force no italic
+    no_bold = false, -- Force no bold
+    no_underline = false, -- Force no underline
+    styles = { -- Handles the styles of general hi groups (see `:h highlight-args`):
+        comments = { "italic" }, -- Change the style of comments
+        conditionals = { "italic" },
+        loops = {},
+        functions = {},
+        keywords = {},
+        strings = {},
+        variables = {},
+        numbers = {},
+        booleans = {},
+        properties = {},
+        types = {},
+        operators = {},
+    },
+    color_overrides = {},
+    custom_highlights = {},
+    integrations = {
+        cmp = true,
+        gitsigns = true,
+        nvimtree = true,
+        treesitter = true,
+        notify = false,
+        mini = {
+            enabled = true,
+            indentscope_color = "",
+        },
+        -- For more plugins integrations please scroll down (https://github.com/catppuccin/nvim#integrations)
+    },
 })
 
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'NeoSolarized',
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    disabled_filetypes = {
-      statusline = {},
-      winbar = {},
-    },
-    ignore_focus = {},
-    always_divide_middle = true,
-    globalstatus = false,
-    refresh = {
-      statusline = 1000,
-      tabline = 1000,
-      winbar = 1000,
-    }
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {'filename'},
-    lualine_x = {'encoding', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  winbar = {},
-  inactive_winbar = {},
-  extensions = {}
-}
+-- setup must be called before loading
+vim.cmd.colorscheme "catppuccin"
 
-require('indent_blankline').setup({
-  char = '▏',
-  show_trailing_blankline_indent = false,
-  show_first_indent_level = false,
-  use_treesitter = true,
-  show_current_context = false
+if vim.g.started_by_firenvim == true then
+else
+
+-- vim.cmd[[colorscheme NeoSolarized]]
+
+-- require('bufferline').setup({
+--   options = {
+--     mode = 'buffers',
+--     offsets = {
+--       {filetype = 'NvimTree'}
+--     },
+--   },
+--   highlights = {
+--     buffer_selected = {
+--       italic = false
+--     },
+--     indicator_selected = {
+--       fg = {attribute = 'fg', highlight = 'Function'},
+--       italic = false
+--     }
+--   }
+-- })
+
+-- require('lualine').setup {
+--   options = {
+--     icons_enabled = true,
+--     theme = 'NeoSolarized',
+--     component_separators = { left = '', right = ''},
+--     section_separators = { left = '', right = ''},
+--     disabled_filetypes = {
+--       statusline = {},
+--       winbar = {},
+--     },
+--     ignore_focus = {},
+--     always_divide_middle = true,
+--     globalstatus = false,
+--     refresh = {
+--       statusline = 1000,
+--       tabline = 1000,
+--       winbar = 1000,
+--     }
+--   },
+--   sections = {
+--     lualine_a = {'mode'},
+--     lualine_b = {'branch', 'diff', 'diagnostics'},
+--     lualine_c = {'filename'},
+--     lualine_x = {'encoding', 'filetype'},
+--     lualine_y = {'progress'},
+--     lualine_z = {'location'}
+--   },
+--   inactive_sections = {
+--     lualine_a = {},
+--     lualine_b = {},
+--     lualine_c = {'filename'},
+--     lualine_x = {'location'},
+--     lualine_y = {},
+--     lualine_z = {}
+--   },
+--   tabline = {},
+--   winbar = {},
+--   inactive_winbar = {},
+--   extensions = {}
+-- }
+
+require('ibl').setup({
 })
 
-require('nvim-treesitter.configs').setup({
-  highlight = {
-    enable = true,
-  },
-  ensure_installed = {
-    'python',
-    'javascript',
-    'java',
-    'html',
-    'css',
-    'lua',
-    'nix',
-  },
-  textobjects = {
-    select = {
-      enable = true,
-      lookahead = true,
-      keymaps = {
-        ['af'] = '@function.outer',
-        ['if'] = '@function.inner',
-        ['ac'] = '@class.outer',
-        ['ic'] = '@class.inner',
-      }
-    },
-  },
-})
+-- require('nvim-treesitter.configs').setup({
+--   highlight = {
+--     enable = true,
+--   },
+--   ensure_installed = {
+--     'python',
+--     'javascript',
+--     'java',
+--     'html',
+--     'css',
+--     'lua',
+--     'nix',
+--   },
+--   textobjects = {
+--     select = {
+--       enable = true,
+--       lookahead = true,
+--       keymaps = {
+--         ['af'] = '@function.outer',
+--         ['if'] = '@function.inner',
+--         ['ac'] = '@class.outer',
+--         ['ic'] = '@class.inner',
+--       }
+--     },
+--   },
+-- })
 
 require('nvim-tree').setup({
   hijack_cursor = false,
@@ -141,14 +189,16 @@ require('gitsigns').setup({
 
 vim.keymap.set('n', '<leader>e', '<cmd>NvimTreeToggle<cr>')
 
-vim.keymap.set('n', '<leader><space>', '<cmd>Telescope buffers<cr>')
-vim.keymap.set('n', '<leader>?', '<cmd>Telescope oldfiles<cr>')
-vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>')
-vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
-vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
-vim.keymap.set('n', '<leader>fs', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
+-- vim.keymap.set('n', '<leader><space>', '<cmd>Telescope buffers<cr>')
+-- vim.keymap.set('n', '<leader>?', '<cmd>Telescope oldfiles<cr>')
+-- vim.keymap.set('n', '<leader>ff', '<cmd>Telescope find_files<cr>')
+-- vim.keymap.set('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
+-- vim.keymap.set('n', '<leader>fd', '<cmd>Telescope diagnostics<cr>')
+-- vim.keymap.set('n', '<leader>fs', '<cmd>Telescope current_buffer_fuzzy_find<cr>')
+--
+-- vim.keymap.set('n', '<leader>bc', '<cmd>Bdelete<CR>')
 
-vim.keymap.set('n', '<leader>bc', '<cmd>Bdelete<CR>')
+end
 
 vim.o.tabstop = 2 -- A TAB character looks like 4 spaces
 vim.o.expandtab = true -- Pressing the TAB key will insert spaces instead of a TAB character
@@ -160,31 +210,32 @@ return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
 
   -- theme
-  use ('Tsuzat/NeoSolarized.nvim')
+  -- use ('Tsuzat/NeoSolarized.nvim')
+  use { "catppuccin/nvim", as = "catppuccin" }
 
   -- tabs
-  use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
+  -- use {'akinsho/bufferline.nvim', tag = "v3.*", requires = 'nvim-tree/nvim-web-devicons'}
 
   -- status line
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
-  }
+  -- use {
+  --   'nvim-lualine/lualine.nvim',
+  --   requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+  -- }
 
   -- show indents
   use "lukas-reineke/indent-blankline.nvim"
 
   -- better syntax highlighting
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    run = ':TSUpdate'
-  }
-
-  use({
-    "nvim-treesitter/nvim-treesitter-textobjects",
-    after = "nvim-treesitter",
-    requires = "nvim-treesitter/nvim-treesitter",
-  })
+  -- use {
+  --   'nvim-treesitter/nvim-treesitter',
+  --   run = ':TSUpdate'
+  -- }
+  --
+  -- use({
+  --   "nvim-treesitter/nvim-treesitter-textobjects",
+  --   after = "nvim-treesitter",
+  --   -- requires = "nvim-treesitter/nvim-treesitter",
+  -- })
 
   -- make comments
   use {
@@ -225,6 +276,11 @@ return require('packer').startup(function(use)
 
   -- close buffers
   use "moll/vim-bbye"
+
+  use {
+    'glacambre/firenvim',
+    run = function() vim.fn['firenvim#install'](0) end 
+  }
  
   -- Automatically set up your configuration after cloning packer.nvim
   -- Put this at the end after all plugins
