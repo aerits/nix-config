@@ -12,7 +12,7 @@
       }))
   ];
 
-  services.emacs.enable = true;
+  # services.emacs.enable = true;
 
   home-manager.users.diced.home.packages = [
     (pkgs.emacsWithPackagesFromUsePackage {

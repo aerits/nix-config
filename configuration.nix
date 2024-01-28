@@ -3,39 +3,11 @@
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
 { config, pkgs, ... }:
-
-let
-  # unstableTarball =
-  # fetchTarball
-  # https://github.com/NixOs/nixpkgs/archive/nixos-unstable.tar.gz;
-
-#  nvidia-offload = pkgs.writeShellScriptBin "nvidia-offload" ''
-#    export __NV_PRIME_RENDER_OFFLOAD=1
-#    export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
-#    export __GLX_VENDOR_LIBRARY_NAME=nvidia
-#    export __VK_LAYER_NV_optimus=NVIDIA_only
-#    exec "$@"
-#  '';
-
-in
 { 
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-      ./home-manager.nix
-      ./emacs.nix
-      ./code.nix
-      ./nixgaming.nix
-      # ./hyprland.nix
     ];
-  
-  # nixpkgs.config = {
-  # packageOverrides = pkgs: {
-  # unstable = import unstableTarball {
-  # config = config.nixpkgs.config;
-  # };
-  # };
-  # };
 
   nix.settings.auto-optimise-store = true;
   nix.gc = {
@@ -60,12 +32,8 @@ in
       systemd-boot.enable = true;
       efi = {
         canTouchEfiVariables = true;
-	efiSysMountPoint = "/boot/efi";
+	      efiSysMountPoint = "/boot/efi";
       };
-      #grub = {
-      #  efiSupport = true;
-#	device = "nodev";
-#      };
     };
 
     kernelPackages = pkgs.linuxPackages_zen;
@@ -176,11 +144,6 @@ in
     ];
   };
 
-  virtualisation.docker.rootless = {
-    enable = true;
-    setSocketVariable = true;
-  };
-
   # podman
   virtualisation = {
     podman = {
@@ -204,33 +167,12 @@ in
     # system tools
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
-    # ttyd
     unzip
     cron
-
     steam
     gamescope
-
-    # for matrix
-    # pantalaimon
-
-    # google-drive-ocamlfuse # for google drive stuff
-    # blackbox-terminal
-
     texlive.combined.scheme-medium
-
-    # kwallet-pam
-
-    # gnome tweaks
-    # gnome.gnome-tweaks
-
-    # gnome extensions
-    # gnomeExtensions.appindicator
-    # gnomeExtensions.dash-to-panel
-    # gnomeExtensions.gsconnect
-    
-    # misc
-    # vorta
+    distrobox
     ntfs3g
     prismlauncher-qt5
   ];
@@ -267,17 +209,6 @@ in
   hardware.bluetooth = {
     enable = true;
   };
-
-  #nvidia drivers
-  #services.xserver.videoDrivers = [ "nvidia" ];
-  #hardware.opengl.enable = true;
-  #hardware.nvidia.modesetting.enable = true;
-  #hardware.nvidia.prime = {
-  #  offload.enable = true;
-  #  nvidiaBusId = "PCI:1:0:0";
-  #
-  #    intelBusId = "PCI:0:02:0";
-  #  };
 
   # amd drivers
   boot.initrd.kernelModules = [ "amdgpu" ];
