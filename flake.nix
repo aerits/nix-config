@@ -8,6 +8,8 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
+    hyprland.url = "github:hyprwm/Hyprland";
+
     # nix-gaming.url = "github:fufexan/nix-gaming";
 
     # niri.url = "github:sodiboo/niri-flake";
@@ -22,25 +24,6 @@
         modules = [
           ./configuration.nix
           ./apps.nix
-
-          # nix gaming
-          # ({pkgs, inputs, ...}: {
-          #   environment.systemPackages = [ # or home.packages
-          #     pkgs.gamemode
-          #     inputs.nix-gaming.packages.${pkgs.system}.osu-stable # installs a package
-          #   ];
-          # })
-
-          # (niri.nixosModules.niri)
-          # ({config, pkgs, ...}: {
-          #   environment.systemPackages = [
-          #     pkgs.mako
-          #     pkgs.waybar
-          #     pkgs.swaybg
-          #     pkgs.fuzzel
-          #   ];
-          #   programs.niri.enable = true;
-          # })
 
           # make home-manager as a module of nixos
           # so that home-manager configuration will be deployed automatically when executing `nixos-rebuild switch`

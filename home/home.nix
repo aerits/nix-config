@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 {
-  imports = [ ./code.nix ];
+  imports = [ ./code.nix ./hyprland.nix ];
   home.stateVersion = "23.05";
 
   home.username = "diced";

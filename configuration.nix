@@ -16,6 +16,20 @@
     options = "--delete-older-than 30d";
   };
 
+  programs.hyprland = {
+    enable = true;
+    # xwayland.hidpi = true;
+    # xwayland.enable = true;
+  };
+  services.dbus.enable = true;
+  xdg.portal = {
+    enable = true;
+    wlr.enable = true;
+    extraPortals = [
+      pkgs.xdg-desktop-portal-gtk
+    ];
+  };
+
 
   # one of these commands is turning on flakes ig
   # nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -89,10 +103,10 @@
 
   # kde
   # services.xserver.displayManager.sddm.enable = true;
-  services.xserver.desktopManager.plasma5.enable = true;
-  services.xserver.displayManager.defaultSession = "plasmawayland";
-  programs.dconf.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-kde ];
+  # services.xserver.desktopManager.plasma5.enable = true;
+  # services.xserver.displayManager.defaultSession = "plasmawayland";
+  # programs.dconf.enable = true;
+  # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-kde ];
 
   # Configure keymap in X11
   services.xserver = {
@@ -175,6 +189,12 @@
     distrobox
     ntfs3g
     prismlauncher-qt5
+    libsForQt5.bismuth
+
+    hyprland
+    xdg-desktop-portal-gtk
+    xdg-desktop-portal-hyprland
+    xwayland
   ];
 
   # download fonts
@@ -199,7 +219,7 @@
     enable = true;
     remotePlay.openFirewall = true;
     dedicatedServer.openFirewall = true;
-    gamescopeSession.enable = true;
+    # gamescopeSession.enable = true;
   };
   hardware.steam-hardware.enable = true;
 
@@ -215,6 +235,8 @@
   services.xserver.videoDrivers = [ "amdgpu" ];
 
   # enable flatpaks
+  # xdg.portal.enable = true;
+  # xdg.portal.config.common.default = "*";
   services.flatpak.enable = true;
   fonts.fontDir.enable = true;
   fonts.fontconfig.enable = true;
