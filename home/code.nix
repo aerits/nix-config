@@ -1,5 +1,6 @@
 {config, pkgs, ...}:
 {
+  imports = [ ./game.nix ];
   home.packages = with pkgs; [
     #####################3 coding
     git

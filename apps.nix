@@ -1,6 +1,6 @@
 {config, pkgs, ...}:
 {
   imports = [
-    ./apps/emacs.nix
+    ./apps/emacs/emacs.nix
   ];
 }

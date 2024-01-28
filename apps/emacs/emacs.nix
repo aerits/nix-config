@@ -5,7 +5,7 @@
   nixpkgs.overlays = [
     (import (
       let
-        lock = builtins.fromJSON (builtins.readFile ./flake.lock);
+        lock = builtins.fromJSON (builtins.readFile ../../flake.lock);
       in builtins.fetchTarball {
         url = "https://github.com/nix-community/emacs-overlay/archive/${lock.nodes.emacs-overlay.locked.rev}.tar.gz";
         sha256 = lock.nodes.emacs-overlay.locked.narHash;
