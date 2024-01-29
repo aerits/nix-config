@@ -3,7 +3,6 @@
   imports = [ ./game.nix ];
   home.packages = with pkgs; [
     #####################3 coding
-    git
     # nodejs
     # sbcl
     # openjdk

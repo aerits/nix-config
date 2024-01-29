@@ -16,19 +16,35 @@
     options = "--delete-older-than 30d";
   };
 
-  programs.hyprland = {
-    enable = true;
-    # xwayland.hidpi = true;
-    # xwayland.enable = true;
-  };
-  services.dbus.enable = true;
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [
-      pkgs.xdg-desktop-portal-gtk
-    ];
-  };
+  # programs.hyprland = {
+  #   enable = true;
+  #   # xwayland.hidpi = true;
+  #   # xwayland.enable = true;
+  # };
+  # services.dbus.enable = true;
+  # xdg.portal = {
+  #   enable = true;
+  #   wlr.enable = true;
+  #   extraPortals = [
+  #     pkgs.xdg-desktop-portal-gtk
+  #   ];
+  # };
+  # security.polkit.enable = true;
+  # systemd = {
+  #   user.services.polkit-gnome-authentication-agent-1 = {
+  #     description = "polkit-gnome-authentication-agent-1";
+  #     wantedBy = [ "graphical-session.target" ];
+  #     wants = [ "graphical-session.target" ];
+  #     after = [ "graphical-session.target" ];
+  #     serviceConfig = {
+  #         Type = "simple";
+  #         ExecStart = "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1";
+  #         Restart = "on-failure";
+  #         RestartSec = 1;
+  #         TimeoutStopSec = 10;
+  #       };
+  #   };
+  # };
 
 
   # one of these commands is turning on flakes ig
@@ -91,22 +107,22 @@
   services.xserver.excludePackages = [ pkgs.xterm ];
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome.enable = true;
-  # environment.gnome.excludePackages = (with pkgs; [
-  #   gnome-tour
-  #   epiphany
-  #   gnome.geary
-  #   gnome.yelp
-  #   gnome-console
-  # ]);
+  # services.xserver.displayManager.gdm.enable = true;
+  #  services.xserver.desktopManager.gnome.enable = true;
+  #  environment.gnome.excludePackages = (with pkgs; [
+  #    gnome-tour
+  #    epiphany
+  #    gnome.geary
+  #    gnome.yelp
+  #    gnome-console
+  #  ]);
 
   # kde
-  # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.desktopManager.plasma5.enable = true;
-  # services.xserver.displayManager.defaultSession = "plasmawayland";
-  # programs.dconf.enable = true;
-  # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-kde ];
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
+  services.xserver.displayManager.defaultSession = "plasmawayland";
+  programs.dconf.enable = true;
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-kde ];
 
   # Configure keymap in X11
   services.xserver = {
@@ -147,7 +163,7 @@
     dataDir = "/home/diced/Documents";    # Default folder for new synced folders
     configDir = "/home/diced/Documents/.config/syncthing";   # Folder for Syncthing's settings and keys
   };
-
+  
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.diced = {
     isNormalUser = true;
@@ -180,6 +196,7 @@
   environment.systemPackages = with pkgs; [
     # system tools
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    gitAndTools.gitFull
     wget
     unzip
     cron
@@ -189,12 +206,14 @@
     distrobox
     ntfs3g
     prismlauncher-qt5
-    libsForQt5.bismuth
 
-    hyprland
-    xdg-desktop-portal-gtk
-    xdg-desktop-portal-hyprland
-    xwayland
+    # hyprland
+    # xdg-desktop-portal-gtk
+    # xdg-desktop-portal-hyprland
+    # xwayland
+    # polkit
+    # polkit_gnome
+    # gnome.gnome-keyring
   ];
 
   # download fonts

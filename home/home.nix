@@ -1,6 +1,6 @@
 { config, pkgs, lib, ... }:
 {
-  imports = [ ./code.nix ./hyprland.nix ];
+  imports = [ ./code.nix ];
   home.stateVersion = "23.05";
 
   home.username = "diced";
@@ -16,7 +16,6 @@
     # chat
     teamspeak_client
     element-desktop
-    webcord
 
     # media
     mpv
@@ -48,17 +47,10 @@
     enable = true;
     userName = "aerits";
     userEmail = "stev_nm@protonmail.com";
+    extraConfig.credential.helper = "libsecret";
 
-    extraConfig = {
-      credential.helper = "${
-	      pkgs.git.override {withLibsecret = true; }
-      }/bin/git-credential-libsecret";
-	    safe = {
-        directory = "/etc/nixos";
-	    };
-    };
   };
-  # home-manager.users.diced = {
+  
   # home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
   # home.file.".config/nvim/init.lua".source=./nvim.lua;
   # home.file.".config/mpv/scripts".source=./mpv/scripts;

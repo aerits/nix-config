@@ -8,7 +8,7 @@
 
     emacs-overlay.url = "github:nix-community/emacs-overlay";
 
-    hyprland.url = "github:hyprwm/Hyprland";
+    # hyprland.url = "github:hyprwm/Hyprland";
 
     # nix-gaming.url = "github:fufexan/nix-gaming";
 

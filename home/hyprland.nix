@@ -25,7 +25,7 @@
   wayland.windowManager.hyprland.settings = {
     "$mod" = "ALT_CTRL";
     exec-once = [
-      "waybar & hyprpaper & nm-applet, & pasystray & swaybg -i ~/Pictures/maxresdefault.jpg"
+      "waybar & nm-applet & pasystray & swaybg -i ~/Pictures/maxresdefault.jpg"
     ];
 
     input = {
