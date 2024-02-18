@@ -24,6 +24,15 @@
   (:prefix-map rab/toggles-map
 	       :prefix "C-c t"))
 
+(use-package centaur-tabs
+  :ensure t
+  :demand
+  :config
+  (centaur-tabs-mode t)
+  :bind
+  ("C-<prior>" . centaur-tabs-backward)
+  ("C-<next>" . centaur-tabs-forward))
+
 ;; dash ;;
 (use-package dashboard
   :ensure t
@@ -318,14 +327,18 @@
 ;;   (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
 ;;   (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable))
 
+
 (use-package evil
   :ensure t
   :init
-  (setq evil-disable-insert-state-bindings t)
+  ;; (setq evil-disable-insert-state-bindings t)
+  (setq evil-want-integration t) ;; This is optional since it's already set to t by default.
+  (setq evil-want-keybinding nil)
+
 
   :custom
-  (evil-motion-state-modes nil)
-  (evil-default-state 'emacs)
+  ;; (evil-motion-state-modes nil)
+  ;; (evil-default-state 'emacs)
 
   :config
   ;; (defalias 'evil-insert-state 'evil-emacs-state)
@@ -335,6 +348,12 @@
   (define-key evil-insert-state-map [escape] 'evil-normal-state)
   
   (evil-mode 1))
+
+(use-package evil-collection
+  :after evil
+  :ensure t
+  :config
+  (evil-collection-init))
 
 (use-package consult
   :ensure t
