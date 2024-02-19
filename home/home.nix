@@ -36,6 +36,7 @@
     krita
 
     # temrinal apps
+    emacs-gtk
     yt-dlp
     w3m
     wl-clipboard
@@ -53,9 +54,11 @@
   
   # home.file.".config/alacritty/alacritty.yml".source=./alacritty.yml;
   # home.file.".config/nvim/init.lua".source=./nvim.lua;
-  # home.file.".config/mpv/scripts".source=./mpv/scripts;
-  # home.file.".config/mpv/script-opts".source=./mpv/script-opts;
-  # home.file.".config/mpv/mpv.conf".source=./mpv/mpv.conf;
+  home.file.".config/mpv/scripts".source=./mpv/scripts;
+  home.file.".config/mpv/script-opts".source=./mpv/script-opts;
+  home.file.".config/mpv/mpv.conf".source=./mpv/mpv.conf;
+
+  home.file.".my-emacs/init.el".source=./emacs/emacs.el;
 
   # };
   # };

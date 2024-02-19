@@ -170,7 +170,9 @@
   )
 
 ;; good terminal;;
-(use-package vterm
+;; (use-package vterm
+;;   :ensure t)
+(use-package eat
   :ensure t)
 
 ;; code highlighting ;;
@@ -369,7 +371,7 @@
 
 ;; eaf
 ;; (use-package eaf
-;;   :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+;;   :load-path "~/.my-emacs/site-lisp/emacs-application-framework"
 ;;   :config
 ;;   (require 'eaf-browser)
 ;;   (require 'eaf-video-player)
@@ -391,8 +393,6 @@
 (use-package org-modern
   :ensure t)
 
-(setq org-agenda-files (list "/home/diced/Documents/school files/12th grade/todo.org"))
-
 (global-set-key (kbd "C-c l") #'org-store-link)
 
 ;; insert images
@@ -407,7 +407,7 @@
 (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 
 ;; org babel
-;; (add-to-list 'load-path "~/.emacs.d/site-lisp/ob-nix")
+(add-to-list 'load-path "~/.my-emacs/site-lisp/ob-nix")
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((python . t)
@@ -433,7 +433,7 @@
 
 ;; drawing svgs
 
-(add-to-list 'load-path "~/.emacs.d/site-lisp/el-easydraw")
+(add-to-list 'load-path "~/.my-emacs/site-lisp/el-easydraw")
 
 (with-eval-after-load 'org
   (require 'edraw-org)
