@@ -9,6 +9,7 @@
   home.packages = with pkgs; [
     # internet
     librewolf
+    chromium
     thunderbird
     tor-browser-bundle-bin
     qbittorrent
@@ -16,6 +17,7 @@
     # chat
     teamspeak_client
     element-desktop
+    discord
 
     # media
     mpv

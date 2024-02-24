@@ -6,10 +6,11 @@
     # nodejs
     # sbcl
     # openjdk
-    # rustc
-    # cargo
-    # cmake
-    # rust-analyzer
+    rustc
+    cargo
+    cmake
+    rust-analyzer
+    gcc
 
     # cloudflared
     # code-server
@@ -49,6 +50,9 @@
     # aria 
     # # eaf-file-manager
     # fd
+
+    # coding
+    vscode
     
     # lsp
     rnix-lsp

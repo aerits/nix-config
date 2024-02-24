@@ -194,6 +194,7 @@
   environment.systemPackages = with pkgs; [
     # system tools
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    ripgrep
     gitAndTools.gitFull
     wget
     unzip
@@ -205,6 +206,9 @@
     ntfs3g
     prismlauncher-qt5
     kitty
+
+    # for river town factory on steam
+    roboto
 
     # hyprland
     # xdg-desktop-portal-gtk
@@ -226,7 +230,28 @@
     source-code-pro
     corefonts
     wqy_zenhei # for steam to show cjk fonts
+    roboto
   ];
+  fonts.fontDir.enable = true;
+  fonts.fontconfig.enable = true;
+
+  system.fsPackages = [ pkgs.bindfs ];
+  fileSystems = let
+    mkRoSymBind = path: {
+      device = path;
+      fsType = "fuse.bindfs";
+      options = [ "ro" "resolve-symlinks" "x-gvfs-hide" ];
+    };
+    aggregatedFonts = pkgs.buildEnv {
+      name = "system-fonts";
+      paths = config.fonts.fonts;
+      pathsToLink = [ "/share/fonts" ];
+    };
+    in {
+      # Create an FHS mount to support flatpak host icons/fonts
+      "/usr/share/icons" = mkRoSymBind (config.system.path + "/share/icons");
+      "/usr/share/fonts" = mkRoSymBind (aggregatedFonts + "/share/fonts");
+    };
 
   programs.gamescope = {
     enable = true;
@@ -263,8 +288,7 @@
       # xdg-desktop-portal-gtk
     ];
   };
-  fonts.fontDir.enable = true;
-  fonts.fontconfig.enable = true;
+
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
