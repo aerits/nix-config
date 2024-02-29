@@ -11,6 +11,9 @@ in
     # <home-manager/nixos>
   ];
 
+  nixpkgs.config.permittedInsecurePackages = [
+    "pulsar-1.109.0"
+  ];
   # nixpkgs.config = {
   #   packageOverrides = pkgs: {
   #     unstable = import unstableTarball {
@@ -37,27 +40,27 @@ in
       pkgs.tor-browser-bundle-bin
       # pkgs.foliate
       # pkgs.ppsspp
+      pkgs.godot_4
+      pkgs.vscode
+      pkgs.riseup-vpn
 
       pkgs.teamspeak_client
-      pkgs.iamb
 
-      pkgs.gnuplot
+      # pkgs.gnuplot
 
       # pkgs.xclip
 
       pkgs.wl-clipboard
 
-      pkgs.unityhub
+      # pkgs.unityhub
 
-      pkgs.xorg.xmodmap
+      # pkgs.xorg.xmodmap
 
       pkgs.ispell
-
       pkgs.anki
-
       pkgs.melonDS
 
-      pkgs.rlaunch
+      # pkgs.rlaunch
 
       # used for nov.el in emacs
       pkgs.unzip
@@ -67,6 +70,8 @@ in
 
       pkgs.w3m
       pkgs.gallery-dl
+
+      pkgs.distrobox
       # pkgs.st
 
       # for emacs
@@ -78,35 +83,35 @@ in
 
       # eaf
       #python
-      # (pkgs.python311.withPackages(ps: with ps;
-      #   [
-      #     # eaf stuff
-      #     pandas
-      #     requests
-      #     pyqt6 sip qtpy /*qt6.qtwebengine*/ epc lxml pyqt6-webengine # for eaf
-      #     qrcode # eaf-file-browser
-      #     pysocks # eaf-browser
-      #     pymupdf # eaf-pdf-viewer
-      #     pypinyin # eaf-file-manager
-      #     psutil # eaf-system-monitor
-      #     retry # eaf-markdown-previewer
-      #     markdown
+      (pkgs.python311.withPackages(ps: with ps;
+        [
+          # eaf stuff
+          # pandas
+          # requests
+          # pyqt6 sip qtpy /*qt6.qtwebengine*/ epc lxml pyqt6-webengine # for eaf
+          # qrcode # eaf-file-browser
+          # pysocks # eaf-browser
+          # pymupdf # eaf-pdf-viewer
+          # pypinyin # eaf-file-manager
+          # psutil # eaf-system-monitor
+          # retry # eaf-markdown-previewer
+          # markdown
 
-      #     # stuff
-      #     numpy
-      #     tkinter
-      #     # jedi-language-server
-      #     matplotlib]))
+          # stuff
+          numpy
+          tkinter
+          # jedi-language-server
+          matplotlib]))
       # # eaf
       # pkgs.qt6.qtwebengine
-      # # git
-      pkgs.nodejs
-      pkgs.wmctrl
-      pkgs.xdotool
-      # eaf-browser
-      pkgs.aria 
-      # eaf-file-manager
-      pkgs.fd
+      # # # git
+      # pkgs.nodejs
+      # pkgs.wmctrl
+      # pkgs.xdotool
+      # # eaf-browser
+      # pkgs.aria 
+      # # eaf-file-manager
+      # pkgs.fd
     ];
 
     programs.git = {
@@ -130,7 +135,7 @@ in
     # name = "Capitaine Cursors";
     # };
 
-    home.file.".config/nvim/init.lua".source=./nvim.lua;
+    # home.file.".config/nvim/init.lua".source=./nvim.lua;
 
   };
 }

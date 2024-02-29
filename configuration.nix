@@ -17,13 +17,21 @@ in
       ./home-manager.nix
       # ./emacs.nix
       ./cachix.nix
-      ./hyprland.nix
+      # ./hyprland.nix
+      ./podman.nix
     ];
 
   services.flatpak.enable = true;
+  # xdg.portal = {
+  #   enable = true;
+  #   extraPortals = with pkgs; [
+  #     xdg-desktop-portal-kde
+  #     xdg-desktop-portal-gtk
+  #   ];
+  # };
   # needed for flatpaks on exwm
-  xdg.portal.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+  # xdg.portal.enable = true;
+  # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 
   # airpods i guess
   hardware.bluetooth.enable = true;
@@ -93,25 +101,26 @@ in
   services.xserver.excludePackages = [ pkgs.xterm ];
 
   # login manager
-  services.xserver.displayManager.sddm.enable = true;
-  services.xserver.displayManager.sddm.theme = "catppuccin-sddm-corners-unstable";
+  # services.xserver.displayManager.sddm.enable = true;
+  # services.xserver.displayManager.sddm.theme = "catppuccin-sddm-corners-unstable";
 
   # Enable the GNOME Desktop Environment.
-  # services.xserver.displayManager.gdm.enable = true;
-  # services.xserver.desktopManager.gnome.enable = true;
-  # environment.gnome.excludePackages = (with pkgs; [
-  #   gnome-tour
-  #   epiphany
-  #   gnome.geary
-  #   gnome.yelp
-  #   gnome-console
-  # ]);
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  environment.gnome.excludePackages = (with pkgs; [
+    gnome-tour
+    epiphany
+    gnome.geary
+    gnome.yelp
+    gnome-console
+  ]);
+  programs.dconf.enable = true;
   #
   # kde plasma
   # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.desktopManager.plasma5.enable = true;
-  
-  # environment.plasma5.excludePackages = with pkgs.libsForQt5; [
+  # services.xserver.desktopManager.plasma6.enable = true;
+
+  # environment.plasma6.excludePackages = with pkgs.libsForQt5; [
   #   # elisa
   #   # gwenview
   #   # okular
@@ -194,6 +203,7 @@ in
     isNormalUser = true;
     description = "diced";
     extraGroups = [ "networkmanager" "wheel" "input" ];
+    shell = pkgs.fish;
     packages = with pkgs; [
       #    	libreoffice
 	    # matrix-commander
@@ -207,6 +217,7 @@ in
 	    # 
     ];
   };
+  
 
   # exwm
   # programs.slock.enable = true;
@@ -221,6 +232,8 @@ in
   #   ];
   # };
 
+  programs.fish.enable = true;
+
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
@@ -228,33 +241,38 @@ in
     neovim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
     nodejs
+    htop
     # unstable.ttyd
-    # blackbox-terminal
+    blackbox-terminal
     # unstable.gcc
     cmake
+    gnome.adwaita-icon-theme
 
     # gnome extensions
     gnome.gnome-tweaks
     gnomeExtensions.appindicator
+    gnomeExtensions.pop-shell
     # gnomeExtensions.myhiddentopbar
     lm_sensors
+
+    roboto
     
 
     # steam stuff
     # unstable.protonup-ng
 
     # exwm
-    # rofi
-    # networkmanagerapplet
-    # brightnessctl
-    # alsa-utils
-    # scrot
-    # slock
-    # # upower
-    # tlp
-    # playerctl
-    # pavucontrol
-    # pasystray
+    rofi
+    networkmanagerapplet
+    brightnessctl
+    alsa-utils
+    scrot
+    slock
+    # upower
+    tlp
+    playerctl
+    pavucontrol
+    pasystray
     
 
     # i3
@@ -309,12 +327,33 @@ in
 
   # download fonts
   fonts.packages = with pkgs; [
+    (nerdfonts.override { fonts = [ "SourceCodePro" ]; })
     font-awesome
     noto-fonts
     noto-fonts-cjk
     noto-fonts-emoji
     source-code-pro
+    roboto
   ];
+  fonts.fontDir.enable = true;
+
+  system.fsPackages = [ pkgs.bindfs ];
+  fileSystems = let
+    mkRoSymBind = path: {
+      device = path;
+      fsType = "fuse.bindfs";
+      options = [ "ro" "resolve-symlinks" "x-gvfs-hide" ];
+    };
+    aggregatedFonts = pkgs.buildEnv {
+      name = "system-fonts";
+      paths = config.fonts.fonts;
+      pathsToLink = [ "/share/fonts" ];
+    };
+    in {
+      # Create an FHS mount to support flatpak host icons/fonts
+      "/usr/share/icons" = mkRoSymBind (config.system.path + "/share/icons");
+      "/usr/share/fonts" = mkRoSymBind (aggregatedFonts + "/share/fonts");
+    };
 
   # make steam work
   #programs.steam = {
@@ -328,7 +367,7 @@ in
   #hardware.opengl.enable = true;
 
   # enable flatpaks
-  #services.flatpak.enable = true;
+  # services.flatpak.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
@@ -350,7 +389,7 @@ in
   # networking.firewall.allowedTCPPorts = [ ... ];
   # networking.firewall.allowedUDPPorts = [ ... ];
   # Or disable the firewall altogether.
-  networking.firewall.enable = false;
+  # networking.firewall.enable = false;
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
