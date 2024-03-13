@@ -13,7 +13,6 @@
     # nix-gaming.url = "github:fufexan/nix-gaming";
 
     # niri.url = "github:sodiboo/niri-flake";
-    # niri.inputs.niri-src.url = "github:YaLTeR/niri";
   };
 
   outputs = { self, nixpkgs, home-manager, ... }@inputs: {

@@ -16,6 +16,10 @@
     options = "--delete-older-than 30d";
   };
 
+  nixpkgs.config.permittedInsecurePackages = [
+                "nix-2.15.3"
+              ];
+
   # programs.hyprland = {
   #   enable = true;
   #   # xwayland.hidpi = true;
@@ -105,21 +109,21 @@
   services.xserver.excludePackages = [ pkgs.xterm ];
 
   # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  environment.gnome.excludePackages = (with pkgs; [
-    gnome-tour
-    epiphany
-    gnome.geary
-    gnome.yelp
-    gnome-console
-  ]);
+  # services.xserver.displayManager.gdm.enable = true;
+  # services.xserver.desktopManager.gnome.enable = true;
+  # environment.gnome.excludePackages = (with pkgs; [
+  #   gnome-tour
+  #   epiphany
+  #   gnome.geary
+  #   gnome.yelp
+  #   gnome-console
+  # ]);
 
   # kde
-  # services.xserver.displayManager.sddm.enable = true;
-  # services.xserver.desktopManager.plasma5.enable = true;
-  # services.xserver.displayManager.defaultSession = "plasmawayland";
-  # programs.dconf.enable = true;
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma6.enable = true;
+  services.xserver.displayManager.defaultSession = "plasma";
+  programs.dconf.enable = true;
   # xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland pkgs.xdg-desktop-portal-gtk pkgs.xdg-desktop-portal-kde ];
 
   # Configure keymap in X11
@@ -205,10 +209,17 @@
     distrobox
     ntfs3g
     prismlauncher-qt5
-    kitty
+    gnome.gnome-settings-daemon43
 
     # for river town factory on steam
     roboto
+
+    # niri
+    # alacritty
+    # fuzzel
+    # swaylock
+    # mako
+    # niri
 
     # hyprland
     # xdg-desktop-portal-gtk
@@ -220,7 +231,7 @@
   ];
 
   # download fonts
-  fonts.fonts = with pkgs; [
+  fonts.packages = with pkgs; [
     cantarell-fonts
     # nerdfonts
     (nerdfonts.override { fonts = [ "SourceCodePro" ]; })
@@ -285,7 +296,7 @@
     enable = true;
     extraPortals = with pkgs; [
       xdg-desktop-portal-kde
-      # xdg-desktop-portal-gtk
+      xdg-desktop-portal-gtk
     ];
   };
 

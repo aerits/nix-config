@@ -1,6 +1,17 @@
 {config, pkgs, ...}:
 {
   imports = [ ./game.nix ];
+
+programs = {
+    direnv = {
+      enable = true;
+      enableBashIntegration = true; # see note on other shells below
+      nix-direnv.enable = true;
+    };
+
+    bash.enable = true; # see note on other shells below
+  };
+
   home.packages = with pkgs; [
     #####################3 coding
     # nodejs
@@ -59,7 +70,7 @@
     nil
 
     # latex
-    # texlive.combined.scheme-full
+    texlive.combined.scheme-full
 
     # typst
     # typst

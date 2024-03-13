@@ -20,18 +20,13 @@
 
   boot.initrd.luks.devices."secure".device = "/dev/disk/by-uuid/2dc3f1d6-9792-4100-97f7-77a2af744909";
 
-  fileSystems."/mnt/drive2" =
-    { device = "/dev/disk/by-uuid/f298427e-1131-4605-844f-624c7cb17eaa";
-      fsType = "ext4";
-    };
-
   fileSystems."/boot/efi" =
     { device = "/dev/disk/by-uuid/E10E-5021";
       fsType = "vfat";
     };
 
   fileSystems."/home" =
-    { device = "/dev/sdj2";
+    { device = "/dev/sde2";
       fsType = "ext4";
     };
 
