@@ -86,6 +86,7 @@
       kdePackages.kate
       emacs
       neovim
+      vscode-fhs
       obs-studio
     #  thunderbird
     ];
@@ -104,6 +105,7 @@
 
   services.flatpak.enable = true;
   services.avahi.enable = true;
+  services.emacs.enable = true;
 
   systemd.services.flatpak-repo = {
     wantedBy = [ "multi-user.target" ];
