@@ -15,6 +15,7 @@
 
   networking.hostName = "pc"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
+  networking.nameservers = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -86,6 +87,8 @@
       kdePackages.kate
       emacs
       neovim
+      openutau
+      tetrio-desktop
       vscode-fhs
       obs-studio
     #  thunderbird
@@ -144,6 +147,7 @@
     clang
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
+    noto-fonts
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
