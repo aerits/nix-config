@@ -5,9 +5,9 @@
 { config, pkgs, ... }:
 
 {
-  imports =
-    [ # Include the results of the hardware scan.
-    ];
+  imports = [
+    # Include the results of the hardware scan.
+  ];
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
@@ -15,7 +15,11 @@
 
   networking.hostName = "pc"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  networking.nameservers = [ "8.8.8.8" "8.8.4.4" "1.1.1.1" ];
+  networking.nameservers = [
+    "8.8.8.8"
+    "8.8.4.4"
+    "1.1.1.1"
+  ];
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -82,7 +86,10 @@
   users.users.diced = {
     isNormalUser = true;
     description = "dicedmangoes";
-    extraGroups = [ "networkmanager" "wheel" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+    ];
     packages = with pkgs; [
       kdePackages.kate
       emacs
@@ -91,24 +98,28 @@
       tetrio-desktop
       vscode-fhs
       obs-studio
-    #  thunderbird
+      #  thunderbird
     ];
   };
 
   security.pam.services.login.kwallet.enable = true;
 
-  fileSystems."/home" =
-  { device = "/dev/disk/by-uuid/c13e3340-4202-4107-80e9-841969ebc5ed";
+  fileSystems."/home" = {
+    device = "/dev/disk/by-uuid/c13e3340-4202-4107-80e9-841969ebc5ed";
     fsType = "ext4";
   };
-  fileSystems."/run/media/diced/aurora-dx_fedora" =
-  { device = "/dev/disk/by-uuid/c66ed73b-77b6-4148-8bd0-dc4c50bd2004";
+  fileSystems."/run/media/diced/aurora-dx_fedora" = {
+    device = "/dev/disk/by-uuid/c66ed73b-77b6-4148-8bd0-dc4c50bd2004";
     fsType = "btrfs";
   };
 
   services.flatpak.enable = true;
   services.avahi.enable = true;
-  services.emacs.enable = true;
+
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
 
   systemd.services.flatpak-repo = {
     wantedBy = [ "multi-user.target" ];
@@ -118,8 +129,10 @@
     '';
   };
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-
+  nix.settings.experimental-features = [
+    "nix-command"
+    "flakes"
+  ];
 
   # Install firefox.
   programs.firefox.enable = true;
@@ -131,6 +144,10 @@
     openFirewall = true;
   };
 
+  services.tailscale = {
+    enable = true;
+  };
+
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
@@ -138,6 +155,7 @@
   # $ nix search wget
   environment.systemPackages = with pkgs; [
     git
+    distrobox
     rustup
     keepassxc
     rsync
@@ -145,12 +163,35 @@
     neovim
     android-tools
     clang
+    uutils-findutils
+    ripgrep
+    nil # nix lsp
+    aspell
+    mpv
+    nh
+    motoc
+    # envision
+
+    # dirvish
+    fd
+    poppler
+    mediainfo
+    imagemagick
+    ffmpegthumbnailer
+    unzip
+    # dirvish
+
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts
-  #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-  #  wget
+    wlx-overlay-s
+    nodePackages_latest.prettier
+    nixfmt-rfc-style
+    #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    #  wget
   ];
+
+  programs.direnv.enable = true;
 
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
@@ -168,12 +209,14 @@
 
   # List services that you want to enable:
 
+  hardware.bluetooth.enable = true;
+
   # Enable the OpenSSH daemon.
-  # services.openssh.enable = true;
+  services.openssh.enable = true;
 
   # Open ports in the firewall.
-  # networking.firewall.allowedTCPPorts = [ ... ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
+  networking.firewall.allowedTCPPorts = [ 22 ];
+  networking.firewall.allowedUDPPorts = [ 22 ];
   # Or disable the firewall altogether.
   # networking.firewall.enable = false;
 
