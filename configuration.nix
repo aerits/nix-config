@@ -171,6 +171,9 @@
     nh
     motoc
     # envision
+    tmux
+    waypipe
+    transmission_4
 
     # dirvish
     fd
