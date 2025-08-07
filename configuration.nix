@@ -116,6 +116,19 @@
   services.flatpak.enable = true;
   services.avahi.enable = true;
 
+  services.transmission = {
+    enable = true;
+    openRPCPort = true;
+    settings = {
+      # Override default settings
+      rpc-bind-address = "0.0.0.0"; # Bind to own IP
+      rpc-whitelist = "127.0.0.1,10.0.0.1,100.80.54.57"; # Whitelist your remote machine (10.0.0.1 in this example)
+      rpc-host-whitelist-enabled = false;
+    };
+  };
+
+  services.emacs.enable = true;
+
   virtualisation.podman = {
     enable = true;
     dockerCompat = true;
@@ -156,6 +169,7 @@
   environment.systemPackages = with pkgs; [
     git
     distrobox
+    home-manager
     rustup
     keepassxc
     rsync
