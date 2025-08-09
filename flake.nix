@@ -37,6 +37,7 @@
           ./apps/vr.nix
           ./apps/emacs.nix
           ./apps/torrenting.nix
+          ./de/kde.nix
           nixpkgs-xr.nixosModules.nixpkgs-xr
           nixowos.nixosModules.default
           { nixowos.enable = true; }

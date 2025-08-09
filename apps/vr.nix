@@ -15,6 +15,5 @@
   environment.systemPackages = with pkgs; [
     motoc
     wlx-overlay-s
-
   ];
 }
