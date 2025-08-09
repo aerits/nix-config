@@ -2,7 +2,12 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -12,6 +17,8 @@
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  boot.kernelPackages = pkgs.linuxPackages_zen;
 
   networking.hostName = "pc"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
@@ -92,6 +99,7 @@
     ];
     packages = with pkgs; [
       kdePackages.kate
+      krita
       emacs
       neovim
       openutau
@@ -104,30 +112,8 @@
 
   security.pam.services.login.kwallet.enable = true;
 
-  fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/c13e3340-4202-4107-80e9-841969ebc5ed";
-    fsType = "ext4";
-  };
-  fileSystems."/run/media/diced/aurora-dx_fedora" = {
-    device = "/dev/disk/by-uuid/c66ed73b-77b6-4148-8bd0-dc4c50bd2004";
-    fsType = "btrfs";
-  };
-
   services.flatpak.enable = true;
   services.avahi.enable = true;
-
-  services.transmission = {
-    enable = true;
-    openRPCPort = true;
-    settings = {
-      # Override default settings
-      rpc-bind-address = "0.0.0.0"; # Bind to own IP
-      rpc-whitelist = "127.0.0.1,10.0.0.1,100.80.54.57"; # Whitelist your remote machine (10.0.0.1 in this example)
-      rpc-host-whitelist-enabled = false;
-    };
-  };
-
-  services.emacs.enable = true;
 
   virtualisation.podman = {
     enable = true;
@@ -151,12 +137,6 @@
   programs.firefox.enable = true;
   programs.steam.enable = true;
 
-  services.wivrn = {
-    enable = true;
-    defaultRuntime = true;
-    openFirewall = true;
-  };
-
   services.tailscale = {
     enable = true;
   };
@@ -170,40 +150,25 @@
     git
     distrobox
     home-manager
-    rustup
     keepassxc
     rsync
     rclone
     neovim
-    android-tools
-    clang
-    uutils-findutils
-    ripgrep
-    nil # nix lsp
-    aspell
     mpv
-    nh
-    motoc
-    # envision
+    fastfetch
+
+    # terminal utils
     tmux
     waypipe
     transmission_4
 
-    # dirvish
-    fd
-    poppler
-    mediainfo
-    imagemagick
-    ffmpegthumbnailer
-    unzip
-    # dirvish
+    xsettingsd # fix cursor
+    xorg.xrdb
 
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts
-    wlx-overlay-s
-    nodePackages_latest.prettier
-    nixfmt-rfc-style
+
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
   ];
