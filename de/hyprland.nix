@@ -6,6 +6,10 @@
 }:
 
 {
+  # hyprland is scuffed
+  # do not use
+  # has cool eyecandy though
+  services.displayManager.sddm.enable = true;
   programs.hyprland = {
     enable = true;
     withUWSM = true; # recommended for most users
