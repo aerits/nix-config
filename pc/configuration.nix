@@ -114,6 +114,7 @@
   virtualisation.podman = {
     enable = true;
     dockerCompat = true;
+    defaultNetwork.settings.dns_enabled = true;
   };
 
   systemd.services.flatpak-repo = {
@@ -164,6 +165,8 @@
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     noto-fonts
+
+    podman-compose
 
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
