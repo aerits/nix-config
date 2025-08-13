@@ -37,7 +37,6 @@
           ./apps/vr.nix
           ./apps/emacs.nix
           ./apps/torrenting.nix
-          ./apps/gnome-boxes.nix
           ./de/kde.nix
           nixpkgs-xr.nixosModules.nixpkgs-xr
           nixowos.nixosModules.default

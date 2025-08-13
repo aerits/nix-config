@@ -99,6 +99,7 @@
       emacs
       neovim
       openutau
+      audacity
       tetrio-desktop
       vscode-fhs
       obs-studio
