@@ -28,7 +28,6 @@
           };
           hash = "sha256-87JcULH1tAA487VwKVBmXhYTXCdMoYM3gOQTkM53ehE=";
         };
-
       };
     })
   ];
@@ -37,6 +36,15 @@
     enable = true;
     defaultRuntime = true;
     openFirewall = true;
+    package = pkgs.wivrn.overrideAttrs (old: {
+      cmakeFlags = old.cmakeFlags ++ [
+        (lib.cmakeBool "WIVRN_FEATURE_STEAMVR_LIGHTHOUSE" true)
+      ];
+    });
+    monadoEnvironment = {
+      WIVRN_USE_STEAMVR_LH = "1";
+      LH_DISCOVER_WAIT_MS = "6000";
+    };
   };
   environment.systemPackages = with pkgs; [
     motoc
