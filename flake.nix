@@ -18,6 +18,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.lix.follows = "lix";
     };
+    nix-minecraft.url = "github:Infinidoge/nix-minecraft";
   };
   outputs =
     {
@@ -27,9 +28,15 @@
       nixowos,
       lix,
       lix-module,
-    }:
+      nix-minecraft,
+    }@inputs:
+    let
+      system = "x86_64-linux";
+    in
     {
       nixosConfigurations.pc = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs; };
         modules = [
           ./pc/configuration.nix
           ./pc/hardware-configuration.nix
@@ -37,6 +44,7 @@
           ./apps/vr.nix
           ./apps/emacs.nix
           ./apps/torrenting.nix
+          ./apps/mc-server.nix
           ./de/kde.nix
           nixpkgs-xr.nixosModules.nixpkgs-xr
           nixowos.nixosModules.default

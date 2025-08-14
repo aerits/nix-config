@@ -92,6 +92,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "minecraft"
     ];
     packages = with pkgs; [
       kdePackages.kate
