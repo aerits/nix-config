@@ -21,6 +21,11 @@ buildFHSEnv {
     ++ (with pkgs; [
       stdenv.cc.libc
       gcc
+      cargo
+      libclang
+      cmake
+      gnumake
+      libcxx
     ])
     ++ (
       # OpenHMD dependencies

@@ -104,6 +104,8 @@
       tetrio-desktop
       vscode-fhs
       obs-studio
+      texliveFull
+      findutils
       #  thunderbird
     ];
   };
@@ -180,6 +182,7 @@
   programs.nix-ld.libraries = with pkgs; [
     # Add any missing dynamic libraries for unpackaged programs
     # here, NOT in environment.systemPackages
+    icu
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
