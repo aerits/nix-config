@@ -41,9 +41,11 @@
           ./pc/configuration.nix
           ./pc/hardware-configuration.nix
           ./apps/fix-flatpaks.nix
+          ./apps/appimage.nix
           ./apps/vr.nix
           ./apps/emacs.nix
           ./apps/torrenting.nix
+          ./apps/game.nix
           ./apps/mc-server.nix
           ./de/kde.nix
           nixpkgs-xr.nixosModules.nixpkgs-xr
