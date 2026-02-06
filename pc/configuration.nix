@@ -104,6 +104,9 @@
       vscode-fhs
       obs-studio
       texliveFull
+      texlivePackages.minted
+      kdePackages.kdenlive
+      ffmpeg
       findutils
       #  thunderbird
     ];
@@ -147,6 +150,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
+    dotnet-sdk
     git
     distrobox
     home-manager
@@ -175,6 +179,10 @@
     #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     #  wget
   ];
+
+  environment.sessionVariables = {
+    DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet/";
+  };
 
   programs.direnv.enable = true;
 
@@ -212,6 +220,15 @@
         };
       };
     };
+  };
+
+  i18n.inputMethod = {
+    type = "fcitx5";
+    enable = true;
+    fcitx5.addons = with pkgs; [
+      fcitx5-mozc
+      fcitx5-gtk
+    ];
   };
 
   # Open ports in the firewall.

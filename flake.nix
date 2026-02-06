@@ -19,6 +19,7 @@
       inputs.lix.follows = "lix";
     };
     nix-minecraft.url = "github:Infinidoge/nix-minecraft";
+    spicetify-nix.url = "github:Gerg-L/spicetify-nix";
   };
   outputs =
     {
@@ -29,6 +30,7 @@
       lix,
       lix-module,
       nix-minecraft,
+      spicetify-nix,
     }@inputs:
     let
       system = "x86_64-linux";
@@ -47,10 +49,12 @@
           ./apps/torrenting.nix
           ./apps/game.nix
           ./apps/mc-server.nix
+          ./apps/spotify.nix
           ./de/kde.nix
+          ./cachix.nix
           nixpkgs-xr.nixosModules.nixpkgs-xr
-          nixowos.nixosModules.default
-          { nixowos.enable = true; }
+          # nixowos.nixosModules.default
+          # { nixowos.enable = true; }
           lix-module.nixosModules.default
         ];
       };

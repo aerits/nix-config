@@ -7,6 +7,7 @@
 
 {
   services.transmission = {
+    package = pkgs.transmission_4;
     enable = true;
     openRPCPort = true;
     settings = {
