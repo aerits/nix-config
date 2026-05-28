@@ -10,6 +10,7 @@
   services.emacs.enable = true;
 
   environment.systemPackages = with pkgs; [
+    emacsPackages.vterm
 
     # emacs stuff
     android-tools
@@ -18,7 +19,8 @@
     nil # nix lsp
     aspell
     nh
-    nodePackages_latest.prettier
+    # nodePackages_latest.prettier
+    prettier
     nixfmt-rfc-style
 
     # dirvish

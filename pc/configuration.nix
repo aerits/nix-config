@@ -65,6 +65,7 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+  services.printing.drivers = with pkgs; [ hplipWithPlugin ];
 
   # Enable sound with pipewire.
   services.pulseaudio.enable = false;
@@ -93,6 +94,8 @@
       "networkmanager"
       "wheel"
       "minecraft"
+      "podman"
+      "docker"
     ];
     packages = with pkgs; [
       kdePackages.kate
@@ -100,6 +103,7 @@
       emacs
       neovim
       openutau
+      reaper
       audacity
       vscode-fhs
       obs-studio
@@ -108,28 +112,46 @@
       kdePackages.kdenlive
       ffmpeg
       findutils
+
+      flatpak
+
       #  thunderbird
     ];
   };
 
   security.pam.services.login.kwallet.enable = true;
 
-  services.flatpak.enable = true;
+  # services.flatpak.enable = true;
   services.avahi.enable = true;
 
+  virtualisation.containers.enable = true;
   virtualisation.podman = {
     enable = true;
-    dockerCompat = true;
     defaultNetwork.settings.dns_enabled = true;
   };
+  # virtualisation.docker = {
+  #   enable = true;
+  #   rootless = {
+  #     enable = true;
+  #     setSocketVariable = true;
+  #     daemon.settings = {
+  #       dns = [
+  #         "1.1.1.1"
+  #         "8.8.8.8"
+  #       ];
+  #       registry-mirrors = [ "https://mirror.gcr.io" ];
+  #       data-root = "/home/diced/docker/";
+  #     };
+  #   };
+  # };
 
-  systemd.services.flatpak-repo = {
-    wantedBy = [ "multi-user.target" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    '';
-  };
+  # systemd.services.flatpak-repo = {
+  #   wantedBy = [ "multi-user.target" ];
+  #   path = [ pkgs.flatpak ];
+  #   script = ''
+  #     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+  #   '';
+  # };
 
   nix.settings.experimental-features = [
     "nix-command"
@@ -150,7 +172,7 @@
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    dotnet-sdk
+    # dotnet-sdk
     git
     distrobox
     home-manager
@@ -170,9 +192,9 @@
     xsettingsd # fix cursor
     xorg.xrdb
 
-    noto-fonts-cjk-sans
-    noto-fonts-cjk-serif
-    noto-fonts
+    # noto-fonts-cjk-sans
+    # noto-fonts-cjk-serif
+    # noto-fonts
 
     podman-compose
 
@@ -180,8 +202,16 @@
     #  wget
   ];
 
-  environment.sessionVariables = {
-    DOTNET_ROOT = "${pkgs.dotnet-sdk}/share/dotnet/";
+  fonts = {
+    packages = with pkgs; [
+      noto-fonts
+      noto-fonts-cjk-sans
+      noto-fonts-cjk-serif
+      noto-fonts-color-emoji
+      roboto
+      source-han-sans
+      source-han-serif
+    ];
   };
 
   programs.direnv.enable = true;

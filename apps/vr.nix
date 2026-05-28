@@ -33,8 +33,15 @@
   environment.systemPackages = with pkgs; [
     # guys i don't know how to write overlays, so i just copied the package from nixpkgs and modified it LMAO
     # envision-new
-    envision
+    # envision
+    # wivrn
     motoc
+    wayvr
     # wlx-overlay-s
   ];
+  services.wivrn = {
+    enable = true;
+    openFirewall = true;
+    steam.importOXRRuntimes = true;
+  };
 }
